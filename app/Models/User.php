@@ -21,6 +21,16 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'bio',
+        'specialization',
+        'education',
+        'nationality',
+        'experience',
+        'personal_aspect',
+        'educational_aspect',
+        'image_cover',
+        'images',
+        'phone',
     ];
 
     /**
@@ -43,6 +53,23 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'images' => 'json',
         ];
+    }
+
+    /**
+     * Get the business records for the user.
+     */
+    public function businesses()
+    {
+        return $this->hasMany(Business::class);
+    }
+
+    /**
+     * Get the blog posts published by the user.
+     */
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'publisher');
     }
 }
