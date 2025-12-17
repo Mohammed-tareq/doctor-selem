@@ -2,13 +2,8 @@
 
 if (!function_exists('apiResponse')) {
 
-    /**
-     * @param bool $status حالة العملية (true/false)
-     * @param string $message رسالة للـ response
-     * @param mixed|null $data البيانات المرجعة
-     * @param int $httpCode كود الـ HTTP (default: 200)
-     */
-    function apiResponse(bool $status, string $message, $data = null, int $httpCode = 200)
+
+    function apiResponse($status, $message, $data = null)
     {
         $result = [
             'status' => $status,
@@ -19,6 +14,6 @@ if (!function_exists('apiResponse')) {
             $result['data'] = $data;
         }
 
-        return response()->json($result, $httpCode);
+        return response()->json($result, $status);
     }
 }

@@ -10,7 +10,7 @@ class Setting extends Model
     use HasFactory;
 
     protected $table = 'setting';
-
+    public $timestamps = false;
     protected $fillable = [
         'site_name',
         'site_email',

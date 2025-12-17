@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('linkin')->nullable();
             $table->string('instagram')->nullable();
             $table->string('footer')->nullable();
-            $table->timestamps();
         });
     }
 
