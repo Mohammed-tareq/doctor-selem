@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->text('title');
-            $table->text('type');
+            $table->string('title');
+            $table->string('type');
             $table->date('year');
             $table->text('classification');
             $table->text('writer');
