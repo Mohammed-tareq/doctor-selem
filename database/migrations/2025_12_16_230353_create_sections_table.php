@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
-            $table->text('title');
+            $table->string('title');
             $table->integer('order');
+            $table->json('content');
             $table->foreignId('article_id')->constrained('articles')->onDelete('cascade');
             $table->timestamps();
         });

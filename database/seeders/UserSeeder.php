@@ -14,23 +14,21 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create([
-            'name' => 'Dr. Test User',
-            'email' => 'test@example.com',
+            'name' => 'الدكتور سليم',
+            'full_name' => 'الدكتور سليم محمد أحمد',
+            'email' => 'doctor@example.com',
             'password' => Hash::make('password'),
-            'bio' => 'Experienced medical professional with years of expertise.',
-            'specialization' => 'Cardiology',
-            'education' => 'MD, PhD in Medicine',
-            'nationality' => 'Egyptian',
-            'experience' => '15 years of clinical practice',
-            'personal_aspect' => 'Dedicated to patient care and medical research.',
-            'educational_aspect' => 'Published multiple research papers in medical journals.',
-            'image_cover' => 'https://via.placeholder.com/1200x400',
+            'bio' => 'طبيب متخصص في الطب الباطني مع خبرة واسعة في التشخيص والعلاج. حاصل على درجة الدكتوراه في الطب من جامعة عريقة مع خبرة في التدريس والبحث العلمي.',
+            'personal_aspect' => 'متفاني في رعاية المرضى والبحث الطبي. ملتزم بتقديم أفضل رعاية صحية ممكنة.',
+            'educational_aspect' => 'نشر عدة أوراق بحثية في المجلات الطبية. أستاذ في كلية الطب مع اهتمام خاص بالبحوث الطبية.',
+            'image_cover' => fake()->imageUrl(1200, 400, 'people', true, 'Doctor Cover'),
             'images' => [
-                'https://via.placeholder.com/400x400',
-                'https://via.placeholder.com/400x400',
+                fake()->imageUrl(400, 400, 'people', true, 'Profile'),
+                fake()->imageUrl(400, 400, 'people', true, 'Profile'),
             ],
-            'phone' => '+201234567890',
+            'phone' => '+966501234567',
         ]);
     }
 }
+
 

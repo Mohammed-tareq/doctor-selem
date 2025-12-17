@@ -13,15 +13,17 @@ class Article extends Model
         'title',
         'type',
         'year',
-        'classification',
+        'category_id',
         'writer',
         'post_by',
+        'references',
     ];
 
     protected function casts(): array
     {
         return [
             'year' => 'date',
+            'references' => 'json',
         ];
     }
 
@@ -32,5 +34,14 @@ class Article extends Model
     {
         return $this->hasMany(Section::class, 'article_id');
     }
+
+    /**
+     * Get the category that owns the article.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }
+
 

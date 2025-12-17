@@ -20,11 +20,70 @@ class SectionFactory extends Factory
      */
     public function definition(): array
     {
+        // Arabic section titles
+        $arabicTitles = [
+            'المقدمة',
+            'الخلفية النظرية',
+            'المنهجية',
+            'النتائج',
+            'المناقشة',
+            'الخلاصة',
+            'المراجع',
+            'الملاحق',
+        ];
+
+        // Arabic content
+        $arabicContent = [
+            [
+                'title' => 'المقدمة',
+                'type' => 'text',
+                'content' => 'مقدمة شاملة عن الموضوع المطروح',
+            ],
+            [
+                'title' => 'الخلفية النظرية',
+                'type' => 'text',
+                'content' => 'مقدمة شاملة عن الموضوع المطروح',
+            ],
+            [
+                'title' => 'المنهجية',
+                'type' => 'text',
+                'content' => 'مقدمة شاملة عن الموضوع المطروح',
+            ]
+            ,
+            [
+                'title' => 'النتائج',
+                'type' => 'image',
+                'content' => asset('files/book1.webp'),
+            ]
+            ,
+            [
+                'title' => 'المناقشة',
+                'type' => 'text',
+                'content' => 'مقدمة شاملة عن الموضوع المطروح',
+            ]
+            ,
+            [
+                'title' => 'الخلاصة',
+                'type' => 'text',
+                'content' => 'مقدمة شاملة عن الموضوع المطروح',
+            ]
+            ,
+            [
+                'title' => 'المراجع',
+                'type' => 'text',
+                'content' => 'مقدمة شاملة عن الموضوع المطروح',
+            ]
+            ,
+            
+        ];
+
         return [
-            'title' => fake()->sentence(),
+            'title' => fake()->randomElement($arabicTitles),
             'order' => fake()->numberBetween(1, 10),
+            'content' => fake()->randomElement($arabicContent),
             'article_id' => Article::factory(),
         ];
     }
 }
+
 

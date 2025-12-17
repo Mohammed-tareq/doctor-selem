@@ -15,9 +15,18 @@ class BlogSeeder extends Seeder
     {
         $user = User::first();
         
+        if (!$user) {
+            $user = \App\Models\User::factory()->create([
+                'name' => 'الدكتور سليم',
+                'full_name' => 'الدكتور سليم محمد أحمد',
+                'email' => 'doctor@example.com',
+            ]);
+        }
+        
         Blog::factory()->count(5)->create([
-            'publisher' => $user->id,
+            'publisher' => (string) $user->id,
         ]);
     }
 }
+
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('business', function (Blueprint $table) {
             $table->id();
             $table->date('start_date');
-            $table->date('end_date')->nullable();
+            $table->date('end_date');
             $table->json('content');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();

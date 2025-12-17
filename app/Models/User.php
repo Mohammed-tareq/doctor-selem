@@ -19,13 +19,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'full_name',
         'email',
         'password',
         'bio',
-        'specialization',
-        'education',
-        'nationality',
-        'experience',
         'personal_aspect',
         'educational_aspect',
         'image_cover',
@@ -33,21 +30,13 @@ class User extends Authenticatable
         'phone',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+
     protected function casts(): array
     {
         return [
@@ -57,19 +46,9 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get the business records for the user.
-     */
+
     public function businesses()
     {
         return $this->hasMany(Business::class);
-    }
-
-    /**
-     * Get the blog posts published by the user.
-     */
-    public function blogs()
-    {
-        return $this->hasMany(Blog::class, 'publisher');
     }
 }

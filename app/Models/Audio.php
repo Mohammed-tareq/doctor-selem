@@ -13,15 +13,15 @@ class Audio extends Model
         'title',
         'content',
         'details',
-        'category_id',
+        'project_id',
+        'type',
     ];
 
-    /**
-     * Get the category that owns the audio.
-     */
-    public function category()
+
+    public function project()
     {
-        return $this->belongsTo(CategoryAudio::class, 'category_id');
+        return $this->belongsTo(Project::class, 'project_id');
     }
 }
+
 

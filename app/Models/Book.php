@@ -19,14 +19,25 @@ class Book extends Model
         'date',
         'type',
         'edition_number',
+        'pages',
+        'category_id',
+        'goals',
     ];
 
     protected function casts(): array
     {
         return [
-            'date' => 'datetime',
+            'date' => 'date',
             'images' => 'json',
         ];
+    }
+
+    /**
+     * Get the category that owns the book.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }
 

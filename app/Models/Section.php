@@ -13,22 +13,16 @@ class Section extends Model
         'title',
         'order',
         'article_id',
+        'content',
     ];
 
-    /**
-     * Get the article that owns the section.
-     */
+    protected $casts = [
+        'content' => 'json',
+    ];
+
+   
     public function article()
     {
         return $this->belongsTo(Article::class, 'article_id');
     }
-
-    /**
-     * Get the blocks for the section.
-     */
-    public function blockes()
-    {
-        return $this->hasMany(Blocke::class, 'section_id');
-    }
 }
-

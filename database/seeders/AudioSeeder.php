@@ -13,13 +13,19 @@ class AudioSeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = CategoryAudio::all();
+        $projects = \App\Models\Project::all();
         
-        foreach ($categories as $category) {
+        if ($projects->isEmpty()) {
+            // Create projects if they don't exist
+            $projects = \App\Models\Project::factory()->count(5)->create();
+        }
+        
+        foreach ($projects as $project) {
             Audio::factory()->count(3)->create([
-                'category_id' => $category->id,
+                'project_id' => $project->id,
             ]);
         }
     }
 }
+
 

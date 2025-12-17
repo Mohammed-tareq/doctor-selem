@@ -14,19 +14,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('full_name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->longText('bio')->nullable();
-            $table->text('specialization')->nullable();
-            $table->text('education')->nullable();
-            $table->text('nationality')->nullable();
-            $table->text('experience')->nullable();
-            $table->longText('personal_aspect')->nullable();
-            $table->longText('educational_aspect')->nullable();
-            $table->text('image_cover')->nullable();
+            $table->string('bio')->nullable();
+            $table->string('personal_aspect')->nullable();
+            $table->string('educational_aspect')->nullable();
+            $table->string('image_cover')->nullable();
             $table->json('images')->nullable();
-            $table->text('phone')->nullable();
+            $table->string('phone')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -41,8 +38,9 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
+            // Changed from text to string and longText to mediumText based on requirement
+            $table->string('user_agent')->nullable();
+            $table->mediumText('payload');
             $table->integer('last_activity')->index();
         });
     }

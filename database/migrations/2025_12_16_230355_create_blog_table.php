@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('blog', function (Blueprint $table) {
             $table->id();
-            $table->text('title');
+            $table->string('title');
             $table->json('content');
-            $table->text('image_cover')->nullable();
-            $table->text('type');
+            $table->string('image_cover');
+            $table->string('image_content');
+            $table->string('type');
             $table->date('date');
-            $table->unsignedBigInteger('publisher')->nullable();
+            $table->string('publisher');
+            $table->integer('num_view');
             $table->timestamps();
-            
-            $table->foreign('publisher')->references('id')->on('users')->onDelete('set null');
         });
     }
 

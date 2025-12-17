@@ -18,6 +18,8 @@ class Blog extends Model
         'type',
         'date',
         'publisher',
+        'category_id',
+        'num_view',
     ];
 
     protected function casts(): array
@@ -28,12 +30,9 @@ class Blog extends Model
         ];
     }
 
-    /**
-     * Get the user who published the blog post.
-     */
-    public function publisherUser()
+    public function category()
     {
-        return $this->belongsTo(User::class, 'publisher');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }
 

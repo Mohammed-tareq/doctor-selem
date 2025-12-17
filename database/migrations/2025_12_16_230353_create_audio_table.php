@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('audio', function (Blueprint $table) {
             $table->id();
-            $table->text('title');
-            $table->text('content');
+            $table->string('title');
+            $table->string('type');
+            $table->string('content');
             $table->text('details');
-            $table->foreignId('category_id')->constrained('category_audio')->onDelete('cascade');
+            $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
             $table->timestamps();
         });
     }

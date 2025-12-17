@@ -20,18 +20,51 @@ class BlogFactory extends Factory
      */
     public function definition(): array
     {
+        // Arabic blog titles
+        $arabicTitles = [
+            'أحدث التطورات في مجال الطب',
+            'نصائح صحية مهمة للجميع',
+            'مقال عن الصحة النفسية',
+            'تحديثات حول الأبحاث الطبية',
+            'رأي حول مستقبل الرعاية الصحية',
+            'دليل شامل للصحة العامة',
+            'أخبار طبية مهمة',
+            'مقال تعليمي عن الطب',
+        ];
+
+        // Arabic content
+        $arabicContent = [
+            'introduction' => 'مقدمة شاملة عن الموضوع المطروح',
+            'body' => 'محتوى تفصيلي يغطي جميع جوانب الموضوع مع شرح مفصل لكل النقاط المهمة',
+            'conclusion' => 'خلاصة الموضوع مع التوصيات المهمة',
+        ];
+
+        // Arabic types
+        $arabicTypes = [
+            'أخبار',
+            'تعليمي',
+            'رأي',
+            'تحديث',
+            'مقال',
+        ];
+
+        $user = User::first() ?? User::factory()->create([
+            'name' => 'الدكتور سليم',
+            'full_name' => 'الدكتور سليم محمد أحمد',
+            'email' => 'doctor@g.com',
+        ]);
+
         return [
-            'title' => fake()->sentence(),
-            'content' => [
-                'introduction' => fake()->paragraph(),
-                'body' => fake()->paragraphs(3, true),
-                'conclusion' => fake()->paragraph(),
-            ],
-            'image_cover' => fake()->imageUrl(),
-            'type' => fake()->randomElement(['news', 'tutorial', 'opinion', 'update']),
+            'title' => fake()->randomElement($arabicTitles),
+            'content' => $arabicContent,
+            'image_cover' => asset('files/book1.webp'),
+            'image_content' => asset('files/book2.webp'),
+            'type' => fake()->randomElement($arabicTypes),
             'date' => fake()->date(),
-            'publisher' => User::factory(),
+            'publisher' => (string) $user->id,
+            'num_view' => fake()->numberBetween(0, 10000),
         ];
     }
 }
+
 

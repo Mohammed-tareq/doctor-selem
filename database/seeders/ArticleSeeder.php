@@ -16,3 +16,4 @@ class ArticleSeeder extends Seeder
     }
 }
 
+

@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('setting', function (Blueprint $table) {
             $table->id();
-            $table->text('site_name');
-            $table->text('site_email');
-            $table->text('site_phone');
-            $table->text('facebook')->nullable();
-            $table->text('twitter')->nullable();
-            $table->text('linkin')->nullable();
-            $table->text('instagram')->nullable();
-            $table->text('footer')->nullable();
+            $table->string('site_name');
+            $table->string('site_email');
+            $table->string('site_phone');
+            $table->string('facebook')->nullable();
+            $table->string('twitter')->nullable();
+            $table->string('linkin')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('footer')->nullable();
             $table->timestamps();
         });
     }

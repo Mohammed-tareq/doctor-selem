@@ -14,10 +14,19 @@ class BusinessSeeder extends Seeder
     public function run(): void
     {
         $user = User::first();
-        
+
+        if (!$user) {
+            $user = \App\Models\User::factory()->create([
+                'name' => 'الدكتور سليم',
+                'full_name' => 'الدكتور سليم محمد أحمد',
+                'email' => 'doctor@example.com',
+            ]);
+        }
+
         Business::factory()->count(3)->create([
             'user_id' => $user->id,
         ]);
     }
 }
+
 

@@ -19,16 +19,28 @@ class SettingFactory extends Factory
      */
     public function definition(): array
     {
+        // Arabic site names
+        $arabicSiteNames = [
+            'موقع الدكتور سليم',
+            'المركز الطبي المتخصص',
+            'عيادة الدكتور',
+            'المركز الطبي الشامل',
+        ];
+
+        // Arabic footer
+        $arabicFooter = 'جميع الحقوق محفوظة © ' . date('Y');
+
         return [
-            'site_name' => fake()->company(),
+            'site_name' => fake()->randomElement($arabicSiteNames),
             'site_email' => fake()->companyEmail(),
-            'site_phone' => fake()->phoneNumber(),
+            'site_phone' => '+966' . fake()->numerify('########'),
             'facebook' => 'https://facebook.com/' . fake()->userName(),
             'twitter' => 'https://twitter.com/' . fake()->userName(),
             'linkin' => 'https://linkedin.com/in/' . fake()->userName(),
             'instagram' => 'https://instagram.com/' . fake()->userName(),
-            'footer' => fake()->sentence(),
+            'footer' => $arabicFooter,
         ];
     }
 }
+
 

@@ -19,14 +19,39 @@ class ArticleFactory extends Factory
      */
     public function definition(): array
     {
+        // Arabic article titles
+        $arabicTitles = [
+            'دراسة حول تأثير العلاج الجديد على مرضى السكري',
+            'مراجعة شاملة لأحدث الأبحاث في طب القلب',
+            'تحليل حالة نادرة في جراحة المخ والأعصاب',
+            'رأي حول مستقبل الطب الشخصي',
+            'بحث في فعالية الأدوية الجديدة',
+            'دراسة عن الصحة النفسية في المجتمع',
+            'تحليل الأوبئة الحديثة',
+            'بحث في الطب الوقائي',
+        ];
+
+        // Arabic types
+        $arabicTypes = [
+            'بحث',
+            'مراجعة',
+            'دراسة حالة',
+            'رأي',
+            'تحليل',
+        ];
+
+        // Arabic names
+        $arabicNames = "دكتور مصطفي ";
+
         return [
-            'title' => fake()->sentence(),
-            'type' => fake()->randomElement(['research', 'review', 'case-study', 'opinion']),
+            'title' => fake()->randomElement($arabicTitles),
+            'type' => fake()->randomElement($arabicTypes),
             'year' => fake()->date(),
-            'classification' => fake()->word(),
-            'writer' => fake()->name(),
-            'post_by' => fake()->name(),
+            'writer' => $arabicNames,
+            'post_by' => $arabicNames,
+            'category_id' => \App\Models\Category::factory(),
         ];
     }
 }
+
 

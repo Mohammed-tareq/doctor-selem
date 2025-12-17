@@ -20,16 +20,71 @@ class BusinessFactory extends Factory
      */
     public function definition(): array
     {
+        // Arabic content
+        $arabicContent = [
+           [
+               'type' => 'work',
+               'content' => 'عمل في مجله مصر '
+           ],
+           [
+               'type' => 'award',
+               'content' => 'حصلت على بكالوريوس الطب من جامعه القاهره'
+           ],
+            [
+                'type' => 'award',
+                'content' => 'حصل علي جوائز'
+            ],
+           [
+               'type' => 'work',
+               'content' => 'عمل في مجله مصر '
+           ],
+           [
+               'type' => 'award',
+               'content' => 'حصلت على بكالوريوس الطب من جامعه القاهره'
+           ],
+            [
+                'type' => 'award',
+                'content' => 'حصل علي جوائز'
+            ],
+           [
+               'type' => 'work',
+               'content' => 'عمل في مجله مصر '
+           ],
+           [
+               'type' => 'award',
+               'content' => 'حصلت على بكالوريوس الطب من جامعه القاهره'
+           ],
+            [
+                'type' => 'award',
+                'content' => 'حصل علي جوائز'
+            ],
+           [
+               'type' => 'work',
+               'content' => 'عمل في مجله مصر '
+           ],
+           [
+               'type' => 'award',
+               'content' => 'حصلت على بكالوريوس الطب من جامعه القاهره'
+           ],
+            [
+                'type' => 'award',
+                'content' => 'حصل علي جوائز'
+            ],
+        ];
+
+        $user = User::first() ?? User::factory()->create([
+            'name' => 'الدكتور سليم',
+            'full_name' => 'الدكتور سليم محمد أحمد',
+            'email' => 'doctor@example.com',
+        ]);
+
         return [
             'start_date' => fake()->date(),
-            'end_date' => fake()->optional()->date(),
-            'content' => [
-                'description' => fake()->paragraph(),
-                'services' => fake()->words(5),
-                'location' => fake()->address(),
-            ],
-            'user_id' => User::factory(),
+            'end_date' => fake()->date(),
+            'content' => $arabicContent,
+            'user_id' => $user->id,
         ];
     }
 }
+
 

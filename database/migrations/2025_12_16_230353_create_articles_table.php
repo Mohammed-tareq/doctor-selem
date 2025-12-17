@@ -16,9 +16,10 @@ return new class extends Migration
             $table->string('title');
             $table->string('type');
             $table->date('year');
-            $table->text('classification');
-            $table->text('writer');
-            $table->text('post_by');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->string('writer');
+            $table->string('post_by');
+            $table->json('references')->nullable();
             $table->timestamps();
         });
     }

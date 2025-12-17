@@ -19,20 +19,47 @@ class BookFactory extends Factory
      */
     public function definition(): array
     {
+        // Arabic book titles
+        $arabicTitles = [
+            'أساسيات الطب الباطني',
+            'دليل شامل للجراحة',
+            'الطب النفسي الحديث',
+            'أمراض القلب والشرايين',
+            'طب الأطفال الشامل',
+            'الطب الوقائي',
+            'الأدوية والعلاجات',
+            'التشخيص الطبي',
+        ];
+
+        // Arabic summary
+        $arabicSummary = 'ملخص شامل للكتاب يغطي أهم المواضيع والمحاور الرئيسية مع شرح مفصل لكل فصل من فصول الكتاب';
+
+        // Arabic types
+        $arabicTypes = [
+            'كتاب دراسي',
+            'مرجع',
+            'دليل',
+            'كتاب تعليمي',
+            'كتاب مرجعي',
+        ];
+
         return [
-            'title' => fake()->sentence(4),
-            'lang' => fake()->randomElement(['en', 'ar', 'fr', 'es']),
-            'summary' => fake()->paragraphs(2, true),
+            'title' => fake()->randomElement($arabicTitles),
+            'lang' => fake()->randomElement(['ar', 'en', 'fr']),
+            'summary' => $arabicSummary,
             'images' => [
-                fake()->imageUrl(),
-                fake()->imageUrl(),
-            ],
+               asset('files/book1.webp'),
+                asset('files/book2.webp'),          ],
             'link' => fake()->url(),
-            'publishing_house' => fake()->numberBetween(1, 10),
+            'publishing_house' => fake()->company(),
             'date' => fake()->dateTime(),
-            'type' => fake()->randomElement(['textbook', 'reference', 'novel', 'guide']),
+            'type' => fake()->randomElement($arabicTypes),
             'edition_number' => fake()->numberBetween(1, 5),
+            'pages' => fake()->numberBetween(100, 1000),
+            'goals' => 'أهداف الكتاب تشمل توفير معلومات شاملة ومفيدة للقارئ',
+            'category_id' => \App\Models\Category::factory(),
         ];
     }
 }
+
 

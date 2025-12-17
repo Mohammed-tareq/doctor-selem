@@ -23,25 +23,36 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        // Arabic names
+        $arabicNames = 'الدكتور سليم';
+
+
+        $arabicFullNames = 'الدكتور سليم محمد أحمد';
+
+        // Arabic bio examples
+        $arabicBios = 'طبيب متخصص في الطب الباطني مع خبرة واسعة في التشخيص والعلاج
+            أستاذ في كلية الطب مع اهتمام خاص بالبحوث الطبية
+            جراح متخصص في جراحة القلب مع سنوات من الخبرة
+            طبيب أطفال مع شغف بمساعدة الأطفال والعائلات
+            باحث طبي متخصص في الأمراض المزمنة';
+
+
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => $arabicNames,
+            'full_name' => $arabicFullNames,
+            'email' => 'doctor@example.com',
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'bio' => fake()->paragraph(),
-            'specialization' => fake()->jobTitle(),
-            'education' => fake()->sentence(),
-            'nationality' => fake()->country(),
-            'experience' => fake()->sentence(),
-            'personal_aspect' => fake()->paragraph(),
-            'educational_aspect' => fake()->paragraph(),
-            'image_cover' => fake()->imageUrl(),
+            'bio' => $arabicBios,
+            'personal_aspect' =>$arabicBios,
+            'educational_aspect' => $arabicBios,
+            'image_cover' =>asset('files/user.webp'),
             'images' => [
-                fake()->imageUrl(),
-                fake()->imageUrl(),
+                asset('files/user.webp'),
+                asset('files/user2.webp'),
             ],
-            'phone' => fake()->phoneNumber(),
+            'phone' => '00966555555555',
         ];
     }
 
