@@ -49,8 +49,8 @@ class UserFactory extends Factory
             'educational_aspect' => $arabicBios,
             'image_cover' =>asset('files/user.webp'),
             'images' => [
-                asset('files/user.webp'),
-                asset('files/user2.webp'),
+                asset('files/user1.png'),
+                asset('files/user2.png'),
             ],
             'phone' => '00966555555555',
         ];
