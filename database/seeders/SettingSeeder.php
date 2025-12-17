@@ -26,3 +26,4 @@ class SettingSeeder extends Seeder
 }
 
 
+
