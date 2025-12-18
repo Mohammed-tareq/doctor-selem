@@ -12,10 +12,13 @@ class BookController extends Controller
     public function getBooks()
     {
         $search = request('keyword', null);
+        $per_page = request('per_page', 9);
+        $clean = strip_tags($search);
+        $search = trim($clean);
 
         $books = Book::when($search,
             fn($q) => $q->where("title", "like", "%$search%")
-        )->latest()->paginate('9');
+        )->latest()->paginate($per_page);
 
         if (!$books) apiResponse(404, 'books not found');
 

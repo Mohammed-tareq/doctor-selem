@@ -12,10 +12,13 @@ class BlogController extends Controller
     public function getBlogs()
     {
         $search = request('keyword', null);
+        $per_page = request('per_page', 9);
+        $clean = strip_tags($search);
+        $search = trim($clean);
 
         $blogs = Blog::when($search, fn($query) =>
             $query->where('title', 'like', "%{$search}%")
-        )->latest()->paginate('9');
+        )->latest()->paginate($per_page);
 
         if(!$blogs) apiResponse(404, 'blogs not found');
 

@@ -13,10 +13,13 @@ class ArticleController extends Controller
     {
 
         $search = request('keyword', null);
+        $per_page = request('per_page', 9);
+        $clean = strip_tags($search);
+        $search = trim($clean);
 
         $articles = Article::when($search,
             fn($q) => $q->where("title", "like", "%$search%")
-        )->latest()->paginate(9);
+        )->latest()->paginate($per_page);
 
         if (!$articles) apiResponse(404, 'articles not found');
 
