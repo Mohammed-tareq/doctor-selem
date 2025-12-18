@@ -26,7 +26,6 @@ class Blog extends Model
     {
         return [
             'date' => 'date',
-            'content' => 'json',
         ];
     }
 

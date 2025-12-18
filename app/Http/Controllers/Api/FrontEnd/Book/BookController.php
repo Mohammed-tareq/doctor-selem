@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\FrontEnd\Book;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Books\BookCollection;
+use App\Http\Resources\Books\BookResource;
 use App\Models\Book;
 
 class BookController extends Controller
@@ -20,5 +21,12 @@ class BookController extends Controller
 
         return apiResponse(200, 'success',
             new BookCollection($books)->response()->getData(true));
+    }
+
+    public function getBook($id)
+    {
+        $book = Book::with('category')->find($id);
+        if (!$book) apiResponse(404, 'book not found');
+        return apiResponse(200, 'success', BookResource::make($book));
     }
 }

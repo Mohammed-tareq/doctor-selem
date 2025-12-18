@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Audio;
-use App\Models\CategoryAudio;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use getID3;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Audio>
@@ -56,12 +56,18 @@ class AudioFactory extends Factory
             'توعية',
         ];
 
+        $getID3 = new getID3();
+        $info = $getID3->analyze(public_path('files/audio.mp3'));
+        $duration = isset($info['playtime_seconds']) ? (int)$info['playtime_seconds'] : null;
+
+
         return [
             'title' => fake()->randomElement($arabicTitles),
             'content' => asset('files/audio.mp3'),
             'details' => fake()->randomElement($arabicDetails),
             'type' => fake()->randomElement($arabicTypes),
             'project_id' => \App\Models\Project::factory(),
+            'duration' => $duration,
         ];
     }
 }

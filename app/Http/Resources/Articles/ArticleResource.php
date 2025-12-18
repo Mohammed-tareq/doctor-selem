@@ -19,7 +19,7 @@ class ArticleResource extends JsonResource
         $data = [
             "article_id" => $this->id,
             "article_title" => $this->title,
-            'article_time' => $this->created_at->format('H:i A'),
+            'article_time' => $this->created_at->format('g:i A'),
             'article_date' => $withSections
                 ? $this->year->format('Y')
                 : $this->year->format('d/M/Y'),

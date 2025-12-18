@@ -20,4 +20,15 @@ class AudioController extends Controller
 
         return AudioResource::collection($audios)->response()->getData(true);
     }
+
+    public function getAudio($id)
+    {
+        $audio = Audio::with('project.category')->find($id);
+
+        if (!$audio) apiResponse(404, 'audio not found');
+
+
+        return apiResponse(200, 'success', AudioResource::make($audio));
+    }
+
 }
