@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\FrontEnd\Audio;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\Audios\AudioResource;
 use App\Models\Audio;
 

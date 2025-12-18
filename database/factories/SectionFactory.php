@@ -69,12 +69,18 @@ class SectionFactory extends Factory
             ]
             ,
             [
-                'title' => 'المراجع',
-                'type' => 'text',
-                'content' => 'مقدمة شاملة عن الموضوع المطروح',
+                ['title' => 'المراجع',
+                    'type' => 'text',
+                    'content' => 'مقدمة شاملة عن الموضوع المطروح'],
+                [
+                    'title' => 'النتائج',
+                    'type' => 'image',
+                    'content' => asset('files/book1.webp'),
+                ]
+
             ]
             ,
-            
+
         ];
 
         return [

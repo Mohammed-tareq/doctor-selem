@@ -72,7 +72,7 @@ class UserInfoController extends Controller
 
     protected function getAudios()
     {
-        $audios = Project::with(['audios' =>  fn($q) => $q->oldest()->take(1)])->oldest()->take(4)->get();
+        $audios = Project::with(['audios' => fn($q) => $q->oldest()->take(1)])->oldest()->take(4)->get();
 
         if (!$audios) apiResponse(404, 'audios not found');
         return ProjectResource::collection($audios);

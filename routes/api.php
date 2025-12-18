@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\FrontEnd\Article\ArticleController;
+use App\Http\Controllers\Api\FrontEnd\Audio\AudioController;
 use App\Http\Controllers\Api\FrontEnd\Book\BookController;
 use App\Http\Controllers\Api\FrontEnd\Setting\SettingController;
 use App\Http\Controllers\Api\FrontEnd\User\UserInfoController;
-use App\Http\Controllers\AudioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +21,7 @@ Route::get('/user-info', UserInfoController::class);
 // ================================== Artilces ===========================//
 Route::prefix('articles')->controller(ArticleController::class)->group(function () {
     Route::get('/', 'getArticles');
+    Route::get('/{article_id}', 'getArticle');
 });
 // =================================== end Artilces ========================//
 
