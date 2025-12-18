@@ -15,7 +15,7 @@ Route::get('/user', function (Request $request) {
 
 
 // =================================  User info ===========================//
-Route::get('/user-info', UserInfoController::class);
+Route::get('/home-info', UserInfoController::class);
 // =================================== end User info ===========================//
 
 
