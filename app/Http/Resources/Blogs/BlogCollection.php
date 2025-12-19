@@ -16,7 +16,28 @@ class BlogCollection extends ResourceCollection
     {
         return [
             'blogs' => BlogResource::collection($this->collection),
-            'count' => $this->count()
+            'count' => $this->count(),
+            'pagination' => [
+                'total' => $this->total(),
+
+                'current_page' => $this->currentPage(),
+
+                'last_page' => $this->lastPage(),
+
+                'per_page' => $this->perPage(),
+
+
+                'from' => $this->firstItem(),
+                'to'   => $this->lastItem(),
+                'links' => [
+                    'first' => $this->url(1),
+                    'last'  => $this->url($this->lastPage()),
+                    'prev'  => $this->previousPageUrl(),
+                    'next'  => $this->nextPageUrl(),
+                ],
+
+                'pagination_links' => $this->linkCollection()->toArray(),
+            ],
         ];
     }
 }

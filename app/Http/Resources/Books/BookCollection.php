@@ -15,8 +15,30 @@ class BookCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'books' => BookResource::collection($this->collection),
-            'count' => $this->count()
+
+            'data' => BookResource::collection($this->collection),
+            'count' => $this->count(),
+            'pagination' => [
+            'total' => $this->total(),
+
+            'current_page' => $this->currentPage(),
+
+            'last_page' => $this->lastPage(),
+
+            'per_page' => $this->perPage(),
+
+
+            'from' => $this->firstItem(),
+            'to'   => $this->lastItem(),
+            'links' => [
+                'first' => $this->url(1),
+                'last'  => $this->url($this->lastPage()),
+                'prev'  => $this->previousPageUrl(),
+                'next'  => $this->nextPageUrl(),
+            ],
+
+            'pagination_links' => $this->linkCollection()->toArray(),
+            ],
         ];
     }
 }

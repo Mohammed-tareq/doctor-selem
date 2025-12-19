@@ -12,12 +12,11 @@ class AudioController extends Controller
     {
         $search = request('keyword', null);
         $per_page = request('per_page', 9);
-        $clean = strip_tags($search);
-        $search = trim($clean);
+        $search = $search ? trim(strip_tags($search)) : null;
 
-        $audios = Audio::when($search,
-            fn($q) => $q->where("title", "like", "%$search%"))
-            ->latest()->paginate($per_page);
+
+        $audios = Audio::when($search,fn($q) => $q->where("title", "like", "%${search}%"))
+        ->latest()->paginate($per_page);
 
         if (!$audios) apiResponse(404, 'audios not found');
 
@@ -33,5 +32,4 @@ class AudioController extends Controller
 
         return apiResponse(200, 'success', AudioResource::make($audio));
     }
-
 }

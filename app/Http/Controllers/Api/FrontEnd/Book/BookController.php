@@ -16,14 +16,16 @@ class BookController extends Controller
         $clean = strip_tags($search);
         $search = trim($clean);
 
-        $books = Book::when($search,
-            fn($q) => $q->where("title", "like", "%$search%")
-        )->latest()->paginate($per_page);
-
+        $books = Book::when($search, fn($q) => $q->where("title", "like", "%{$search}%"))
+            ->latest()
+            ->paginate($per_page);
         if (!$books) apiResponse(404, 'books not found');
 
-        return apiResponse(200, 'success',
-            new BookCollection($books)->response()->getData(true));
+        return apiResponse(
+            200,
+            'success',
+        new BookCollection($books)
+        );
     }
 
     public function getBook($id)
