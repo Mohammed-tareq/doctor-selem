@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\FrontEnd\Audio;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Audios\AudioCollection;
 use App\Http\Resources\Audios\AudioResource;
 use App\Models\Audio;
 
@@ -15,12 +16,11 @@ class AudioController extends Controller
         $search = $search ? trim(strip_tags($search)) : null;
 
 
-        $audios = Audio::when($search,fn($q) => $q->where("title", "like", "%${search}%"))
+        $audios = Audio::when($search,fn($q) => $q->where("title", "like", "%{$search}%"))
         ->latest()->paginate($per_page);
 
-        if (!$audios) apiResponse(404, 'audios not found');
-
-        return AudioResource::collection($audios)->response()->getData(true);
+        if ($audios->isEmpty()) apiResponse(404, 'audios not found');
+        return new AudioCollection($audios);
     }
 
     public function getAudio($id)

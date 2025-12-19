@@ -28,16 +28,27 @@ class ArticleCollection extends ResourceCollection
 
 
                 'from' => $this->firstItem(),
-                'to'   => $this->lastItem(),
+                'to' => $this->lastItem(),
                 'links' => [
                     'first' => $this->url(1),
-                    'last'  => $this->url($this->lastPage()),
-                    'prev'  => $this->previousPageUrl(),
-                    'next'  => $this->nextPageUrl(),
+                    'last' => $this->url($this->lastPage()),
+                    'prev' => $this->previousPageUrl(),
+                    'next' => $this->nextPageUrl(),
                 ],
 
                 'pagination_links' => $this->linkCollection()->toArray(),
             ],
         ];
+    }
+
+    public function paginationInformation($request, $paginated, $default)
+    {
+        return [];
+    }
+
+
+    public function with($request)
+    {
+        return [];
     }
 }

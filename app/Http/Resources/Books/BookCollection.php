@@ -19,26 +19,37 @@ class BookCollection extends ResourceCollection
             'data' => BookResource::collection($this->collection),
             'count' => $this->count(),
             'pagination' => [
-            'total' => $this->total(),
+                'total' => $this->total(),
 
-            'current_page' => $this->currentPage(),
+                'current_page' => $this->currentPage(),
 
-            'last_page' => $this->lastPage(),
+                'last_page' => $this->lastPage(),
 
-            'per_page' => $this->perPage(),
+                'per_page' => $this->perPage(),
 
 
-            'from' => $this->firstItem(),
-            'to'   => $this->lastItem(),
-            'links' => [
-                'first' => $this->url(1),
-                'last'  => $this->url($this->lastPage()),
-                'prev'  => $this->previousPageUrl(),
-                'next'  => $this->nextPageUrl(),
-            ],
+                'from' => $this->firstItem(),
+                'to' => $this->lastItem(),
+                'links' => [
+                    'first' => $this->url(1),
+                    'last' => $this->url($this->lastPage()),
+                    'prev' => $this->previousPageUrl(),
+                    'next' => $this->nextPageUrl(),
+                ],
 
-            'pagination_links' => $this->linkCollection()->toArray(),
+                'pagination_links' => $this->linkCollection()->toArray(),
             ],
         ];
+    }
+
+    public function paginationInformation($request, $paginated, $default)
+    {
+        return [];
+    }
+
+
+    public function with($request)
+    {
+        return [];
     }
 }

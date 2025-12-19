@@ -13,13 +13,12 @@ class BookController extends Controller
     {
         $search = request('keyword', null);
         $per_page = request('per_page', 9);
-        $clean = strip_tags($search);
-        $search = trim($clean);
+        $search = $search ? trim(strip_tags($search)) : null;
 
         $books = Book::when($search, fn($q) => $q->where("title", "like", "%{$search}%"))
             ->latest()
             ->paginate($per_page);
-        if (!$books) apiResponse(404, 'books not found');
+        if ($books->isEmpty()) apiResponse(404, 'books not found');
 
         return apiResponse(
             200,

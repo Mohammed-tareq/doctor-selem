@@ -40,4 +40,14 @@ class AudioCollection extends ResourceCollection
             ],
         ];
     }
+    public function paginationInformation($request, $paginated, $default)
+    {
+        return [];
+    }
+
+
+    public function with($request)
+    {
+        return [];
+    }
 }
