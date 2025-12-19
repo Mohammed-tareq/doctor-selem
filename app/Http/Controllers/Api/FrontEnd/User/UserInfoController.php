@@ -22,12 +22,14 @@ class UserInfoController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $user = User::first();
+        $user = User::with([
+            'businesses' => fn ($q) => $q->latest()->take(5)
+        ])->first();
 
         $articals = Article::count() ?? '0';
         $books_count = Book::count() ?? '0';
         $audios_count = Audio::count() ?? '0';
-        $businesses = $user->businesses()->latest()->take(5)->get();
+        $businesses = $user->businesses;
 
         if (!$businesses) apiResponse(404, 'businesses not found');
 
@@ -35,6 +37,9 @@ class UserInfoController extends Controller
             return collect($business->content)
                 ->where('type', 'work');
         })->count() ?? '0';
+
+
+
 
         if (!$user) apiResponse(404, 'user not found');
 

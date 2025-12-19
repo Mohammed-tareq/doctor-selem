@@ -9,24 +9,23 @@ use App\Models\Article;
 
 class ArticleController extends Controller
 {
-    public function getArticles()
-    {
+ public function getArticles()
+{
+    $search = request('keyword');
+    $per_page = request('per_page', 9);
 
-        $search = request('keyword', null);
-        $per_page = request('per_page', 9);
-        $clean = strip_tags($search);
-        $search = trim($clean);
+    $search = $search ? trim(strip_tags($search)) : null;
 
-        $articles = Article::when($search,
-            fn($q) => $q->where("title", "like", "%$search%")
-        )->latest()->paginate($per_page);
+    $articles = Article::when($search, fn($q) => $q->where('title', 'like', "%{$search}%"))
+        ->latest()
+        ->paginate($per_page);
 
-        if (!$articles) apiResponse(404, 'articles not found');
-
-        return apiResponse(200, 'success',
-            new ArticleCollection($articles)->response()->getData(true));
-
+    if ($articles->isEmpty()) {
+        return apiResponse(404, 'articles not found');
     }
+
+    return apiResponse(200, 'success', new ArticleCollection($articles));
+}
 
     public function getArticle($id)
     {
