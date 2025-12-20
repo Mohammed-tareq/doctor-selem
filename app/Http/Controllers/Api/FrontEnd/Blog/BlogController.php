@@ -30,6 +30,7 @@ class BlogController extends Controller
 
         if(!$blog) apiResponse(404, 'blog not found');
 
+        $blog->increment('num_view');
         return apiResponse(200, 'success', BlogResource::make($blog));
     }
 }

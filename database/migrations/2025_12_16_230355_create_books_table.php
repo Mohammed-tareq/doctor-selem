@@ -24,7 +24,8 @@ return new class extends Migration
             $table->mediumText('goals')->nullable();
             $table->integer('edition_number');
             $table->integer('pages')->nullable();
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
+            $table->integer('num_view')->default(0);
             $table->timestamps();
         });
     }

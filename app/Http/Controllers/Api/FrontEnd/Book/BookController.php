@@ -31,6 +31,7 @@ class BookController extends Controller
     {
         $book = Book::with('category')->find($id);
         if (!$book) apiResponse(404, 'book not found');
+        $book->increment('num_view');
         return apiResponse(200, 'success', BookResource::make($book));
     }
 }

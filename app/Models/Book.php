@@ -22,6 +22,7 @@ class Book extends Model
         'pages',
         'category_id',
         'goals',
+        'num_view'
     ];
 
     protected function casts(): array

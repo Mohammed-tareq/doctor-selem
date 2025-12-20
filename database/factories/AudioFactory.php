@@ -68,6 +68,7 @@ class AudioFactory extends Factory
             'type' => fake()->randomElement($arabicTypes),
             'project_id' => \App\Models\Project::factory(),
             'duration' => $duration,
+            'num_view' => fake()->numberBetween(0, 10000),
         ];
     }
 }

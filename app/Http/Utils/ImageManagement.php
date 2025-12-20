@@ -26,7 +26,22 @@ class ImageManagement
 
     }
 
-    protected static function deleteImage($image)
+    public static function storeBlogImage($request, $book)
+    {
+        if($book && ($request->hasFile('image_cover') || $request->has('image_content'))):
+            self::deleteImage($book->image_cover);;
+            self::deleteImage($book->image_content);
+            $coverPath = self::generateImageName($request->image_cover, 'books');
+            $contentPath = self::generateImageName($request->image_content, 'books');
+
+            $book->update([
+                'image_cover' => $coverPath,
+                'image_content' => $contentPath,
+            ]);
+        endif;
+    }
+
+    public static function deleteImage($image)
     {
         if (File::exists(public_path($image))):
             File::delete(public_path($image));

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('writer');
             $table->string('post_by');
             $table->json('references')->nullable();
+            $table->integer('num_view')->default(0);
             $table->timestamps();
         });
     }

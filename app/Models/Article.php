@@ -17,6 +17,7 @@ class Article extends Model
         'writer',
         'post_by',
         'references',
+        'num_view'
     ];
 
     protected function casts(): array

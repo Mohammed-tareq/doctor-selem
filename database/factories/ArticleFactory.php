@@ -50,6 +50,7 @@ class ArticleFactory extends Factory
             'writer' => $arabicNames,
             'post_by' => $arabicNames,
             'category_id' => \App\Models\Category::factory(),
+            'num_view' => fake()->numberBetween(0, 10000),
         ];
     }
 }

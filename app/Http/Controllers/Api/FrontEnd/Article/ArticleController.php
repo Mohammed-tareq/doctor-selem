@@ -86,6 +86,7 @@ class ArticleController extends Controller
         );
 
         $article->total_word_count = $totalSectionsWords + $referencesWordCount;
+        $article->increment('num_view');
         return apiResponse(200, 'success', ArticleResource::make($article));
     }
 

@@ -29,7 +29,7 @@ class AudioController extends Controller
 
         if (!$audio) apiResponse(404, 'audio not found');
 
-
+        $audio->increment('num_view');
         return apiResponse(200, 'success', AudioResource::make($audio));
     }
 }

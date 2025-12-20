@@ -58,6 +58,7 @@ class BookFactory extends Factory
             'pages' => fake()->numberBetween(100, 1000),
             'goals' => 'أهداف الكتاب تشمل توفير معلومات شاملة ومفيدة للقارئ',
             'category_id' => \App\Models\Category::factory(),
+            'num_view' => fake()->numberBetween(0, 10000),
         ];
     }
 }

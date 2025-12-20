@@ -182,7 +182,6 @@ class BlogFactory extends Factory
             'content' => $arabicContent,
             'image_cover' => asset('files/book1.webp'),
             'image_content' => asset('files/book2.webp'),
-            'type' => fake()->randomElement($arabicTypes),
             'date' => fake()->date(),
             'publisher' => (string) $user->id,
             'num_view' => fake()->numberBetween(0, 10000),

@@ -15,6 +15,7 @@ class Audio extends Model
         'details',
         'project_id',
         'type',
+        'num_view'
     ];
 
 
