@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\Dashboard\Auth\ForgetPasswordController;
+use App\Http\Controllers\Api\Dashboard\Auth\LoginController;
 use App\Http\Controllers\Api\FrontEnd\Article\ArticleController;
 use App\Http\Controllers\Api\FrontEnd\Audio\AudioController;
 use App\Http\Controllers\Api\FrontEnd\Blog\BlogController;
@@ -46,3 +48,23 @@ Route::get('/setting', SettingController::class);
 Route::post('/subscribe', SubcribeController::class);
 // ================================ end subscribe  ================================//
 
+
+//==================================== start admin ==================================//
+
+//===================================== login ========================================//
+Route::post('/auth-login' , [LoginController::class , 'login']);
+Route::post('/forget-password',ForgetPasswordController::class);
+//===================================== end login ========================================//
+
+
+Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+
+    Route::get('/user', function () {
+        return auth()->user();
+    });
+    Route::delete('/logout', [LoginController::class , 'logout']);
+});
+
+Route::fallback(function () {
+    return apiResponse(400 , 'Bad Request');
+});
