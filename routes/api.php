@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Dashboard\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Dashboard\Auth\LoginController;
+use App\Http\Controllers\Api\Dashboard\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\FrontEnd\Article\ArticleController;
 use App\Http\Controllers\Api\FrontEnd\Audio\AudioController;
 use App\Http\Controllers\Api\FrontEnd\Blog\BlogController;
@@ -10,8 +11,6 @@ use App\Http\Controllers\Api\FrontEnd\Setting\SettingController;
 use App\Http\Controllers\Api\FrontEnd\Subscribe\SubcribeController;
 use App\Http\Controllers\Api\FrontEnd\User\UserInfoController;
 use Illuminate\Support\Facades\Route;
-
-
 
 
 // =================================  User info ===========================//
@@ -51,10 +50,11 @@ Route::post('/subscribe', SubcribeController::class);
 
 //==================================== start admin ==================================//
 
-//===================================== login ========================================//
-Route::post('/auth-login' , [LoginController::class , 'login']);
-Route::post('/forget-password',ForgetPasswordController::class);
-//===================================== end login ========================================//
+//===================================== Auth ========================================//
+Route::post('/auth-login', [LoginController::class, 'login']);
+Route::post('/forget-password', ForgetPasswordController::class);
+Route::post('/reset-password', ResetPasswordController::class);
+//===================================== end Auth ========================================//
 
 
 Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
@@ -62,9 +62,10 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     Route::get('/user', function () {
         return auth()->user();
     });
-    Route::delete('/logout', [LoginController::class , 'logout']);
+    Route::delete('/logout', [LoginController::class, 'logout']);
 });
 
+//==================================== end admin ==================================//
 Route::fallback(function () {
-    return apiResponse(400 , 'Bad Request');
+    return apiResponse(405, 'Bad Request');
 });
