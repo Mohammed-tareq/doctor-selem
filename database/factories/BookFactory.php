@@ -53,7 +53,7 @@ class BookFactory extends Factory
             'link' => fake()->url(),
             'publishing_house' => fake()->company(),
             'date' => fake()->dateTime(),
-            'type' => fake()->randomElement($arabicTypes),
+//            'type' => fake()->randomElement($arabicTypes),
             'edition_number' => fake()->numberBetween(1, 5),
             'pages' => fake()->numberBetween(100, 1000),
             'goals' => 'أهداف الكتاب تشمل توفير معلومات شاملة ومفيدة للقارئ',

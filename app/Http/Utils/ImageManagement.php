@@ -26,19 +26,36 @@ class ImageManagement
 
     }
 
-    public static function storeBlogImage($request, $book)
+    public static function storeBlogImage($request, $blog)
     {
-        if($book && ($request->hasFile('image_cover') || $request->has('image_content'))):
+        if ($book && ($request->hasFile('image_cover') || $request->has('image_content'))):
             self::deleteImage($book->image_cover);;
             self::deleteImage($book->image_content);
-            $coverPath = self::generateImageName($request->image_cover, 'books');
-            $contentPath = self::generateImageName($request->image_content, 'books');
+            $coverPath = self::generateImageName($request->image_cover, 'Blogs');
+            $contentPath = self::generateImageName($request->image_content, 'Blogs');
 
             $book->update([
                 'image_cover' => $coverPath,
                 'image_content' => $contentPath,
             ]);
         endif;
+    }
+
+    public static function storeBook($request, $book)
+    {
+        if ($request->hasFile('images')):
+            $path = [];
+            foreach ($request->images as $image):
+                $path[] = self::generateImageName($image, 'books');
+            endforeach;
+            if ($book->images):
+                foreach ($book->images as $oldimages) {
+                    self::deleteImage($oldimages);
+                }
+            endif;
+            $book->update(['images' => $path]);
+        endif;
+        return;
     }
 
     public static function deleteImage($image)
