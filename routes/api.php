@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Dashboard\Blog\AdminBlogController;
 use App\Http\Controllers\Api\Dashboard\Book\BookAdminController;
 use App\Http\Controllers\Api\Dashboard\Category\CategoryController;
 use App\Http\Controllers\Api\Dashboard\Home\HomeAdminController;
+use App\Http\Controllers\Api\Dashboard\Project\ProjectAudioController;
 use App\Http\Controllers\Api\FrontEnd\Article\ArticleController;
 use App\Http\Controllers\Api\FrontEnd\Audio\AudioController;
 use App\Http\Controllers\Api\FrontEnd\Blog\BlogController;
@@ -113,6 +114,18 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
         });
     });
     // =================================== end books ======================//
+
+    // =================================== Project ======================//
+    Route::controller(ProjectAudioController::class)->group(function () {
+        Route::get('/projects', 'index')->name('projects');
+        Route::prefix('project')->group(function () {
+            Route::get('/{id}', 'show');
+            Route::post('/store', 'store');
+            Route::put('/update/{id}', 'update');
+            Route::delete('/delete/{id}', 'delete');
+        });
+    });
+    // =================================== end project ======================//
 
 
 });

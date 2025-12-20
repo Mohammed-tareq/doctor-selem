@@ -14,11 +14,17 @@ class ProjectResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'project_id' => $this->id,
             'project_title' => $this->title,
             'project_image_cover' => $this->image_cover,
             'project_audio' => AudioResource::collection($this->whenLoaded('audios')),
         ];
+
+        if($this->audios_count !== null) {
+            $data['audios_count'] = $this->audios->count();
+        }
+
+        return $data;
     }
 }

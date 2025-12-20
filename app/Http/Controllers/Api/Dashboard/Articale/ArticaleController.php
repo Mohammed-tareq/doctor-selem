@@ -134,6 +134,12 @@ class ArticaleController extends Controller
         $article = Article::find($id);
         if (!$article) apiResponse(404, 'article not found');
 
+        foreach ($article->sections as $section) {
+            $section->content = collect($section->content)->map(function ($item) {
+                ImageManagement::deleteImage($item['content']);
+            });
+        }
+
         $article->delete();
         return apiResponse(200, 'article deleted successfully');
     }

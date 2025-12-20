@@ -58,6 +58,18 @@ class ImageManagement
         return;
     }
 
+    public static function storeProjectImage($request, $project)
+    {
+        if ($project && $request->hasFile('image_cover')):
+            self::deleteImage($project->image_cover);
+            $coverPath = self::generateImageName($request->image_cover, 'Projects');
+
+            $project->update([
+                'image_cover' => $coverPath,
+            ]);
+        endif;
+    }
+
     public static function deleteImage($image)
     {
         if (File::exists(public_path($image))):
