@@ -66,6 +66,3 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
 });
 
 //==================================== end admin ==================================//
-Route::fallback(function () {
-    return apiResponse(405, 'Bad Request');
-});
