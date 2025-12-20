@@ -2,28 +2,26 @@
 
 namespace App\Http\Utils;
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class ImageManagement
 {
-    // ========== when using this class send $request->image  not $request ===================//
-    public static function uploadImage($request, $message = null, $user = null)
+    public static function uploadImage($request, $type)
     {
 
-        if ($user && $request->hasFile('image')):
-            self::SaveUserImage($request->image, $user);
-        endif;
-
-
-
-        if ($message && $request->hasFile('content')):
-            self::saveMessageType($request, $message);
-//            self::deleteImage($request->content);
-        endif;
-
-        if ($request->hasFile('image')):
-            self::deleteImage($request->image);
+        if ($request instanceof UploadedFile):
+            if ($type === 'image'):
+                self::deleteImage($request->image);
+                $imagePath = self::generateImageName($request, 'articles/images');
+                return $imagePath;
+            endif;
+            if ($type === 'video'):
+                self::deleteImage($request->video);
+                $videoPath = self::generateImageName($request, 'articles/videos');
+                return $videoPath;
+            endif;
         endif;
 
     }
@@ -35,57 +33,11 @@ class ImageManagement
         endif;
     }
 
-    protected static function generateImageName($image, $path)
+    protected static function generateImageName($file, $path)
     {
-        $fileName = Str::uuid() . time() . '.' . $image->getClientOriginalExtension();
-        return $image->storeAs('uploads/' . $path, $fileName, ['disk' => 'store']);
+        $fileName = Str::uuid() . time() . '.' . $file->getClientOriginalExtension();
+        return $file->storeAs('uploads/' . $path, $fileName, ['disk' => 'store']);
 
     }
-
-    protected static function saveUserImage($image, $user)
-    {
-        $path = self::generateImageName($image, 'users');
-        $user->update([
-            'image' => $path
-        ]);
-    }
-
-    protected static function saveDoctorImage($image, $doctor)
-    {
-        $path = self::generateImageName($image, 'doctors');
-        $doctor->update([
-            'image' => $path
-        ]);
-    }
-
-    protected static function saveMessageType($request, $message, $defaultPath = 'chats')
-    {
-        if ($message->type === 'text') {
-            return; // Text messages are already saved
-        }
-
-        // Get the uploaded file
-        $file = $request->file('content');
-
-        if (!$file) {
-            return;
-        }
-
-        $subfolder = match ($message->type) {
-            'image' => 'images',
-            'audio' => 'voices',
-            'video' => 'videos',
-            default => 'files'
-        };
-
-        // Store file in the correct path structure
-        $path = $file->store("$defaultPath/{$message->chat_id}/$subfolder", 'public');
-
-        // Update message with storage path
-        $message->update([
-            'content' => '/storage/' . $path
-        ]);
-    }
-
 
 }
