@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\Dashboard\Articale\ArticaleController;
 use App\Http\Controllers\Api\Dashboard\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Dashboard\Auth\LoginController;
 use App\Http\Controllers\Api\Dashboard\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\Dashboard\Home\HomeAdminController;
 use App\Http\Controllers\Api\FrontEnd\Article\ArticleController;
 use App\Http\Controllers\Api\FrontEnd\Audio\AudioController;
 use App\Http\Controllers\Api\FrontEnd\Blog\BlogController;
@@ -60,9 +62,23 @@ Route::post('/reset-password', ResetPasswordController::class);
 Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
 
     Route::get('/user', function () {
-        return auth()->user();
+      return auth()->user();
     });
     Route::delete('/logout', [LoginController::class, 'logout']);
+
+
+    // =================================== home page admin ======================//
+    Route::get('/home-page', HomeAdminController::class);
+    // =================================== end home page admin ======================//
+    Route::controller(ArticaleController::class)->group(function () {
+        Route::get('/articles', 'index');
+        Route::prefix('article')->group(function () {
+            Route::get('/{id}', 'show');
+            Route::post('/store', 'store');
+            Route::put('/update/{id}', 'update');
+            Route::delete('/delete/{id}', 'delete');
+        });
+    });
 });
 
 //==================================== end admin ==================================//
