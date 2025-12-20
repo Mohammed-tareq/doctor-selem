@@ -32,7 +32,7 @@ class Article extends Model
      */
     public function sections()
     {
-        return $this->hasMany(Section::class, 'article_id');
+        return $this->hasMany(Section::class, 'article_id')->orderBy('order', 'asc');
     }
 
     /**

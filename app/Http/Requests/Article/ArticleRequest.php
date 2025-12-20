@@ -21,7 +21,7 @@ class ArticleRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'title' => ['required', 'string', 'max:200', 'min:5'],
             'type' => ['required', 'string', 'max:100', 'min:2'],
             'year' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
@@ -68,6 +68,18 @@ class ArticleRequest extends FormRequest
                 }
             ],
         ];
+        if (in_array($this->method(), ['PUT', 'PATCH'])) {
+            $rules['title'][0] = 'sometimes';
+            $rules['type'][0] = 'sometimes';
+            $rules['year'][0] = 'sometimes';
+            $rules['category_id'][0] = 'sometimes';
+            $rules['writer'][0] = 'sometimes';
+            $rules['post_by'][0] = 'sometimes';
+            $rules['sections'][0] = 'sometimes';
+        }
+
+        return $rules;
+
     }
 
 

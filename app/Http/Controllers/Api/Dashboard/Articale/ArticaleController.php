@@ -76,6 +76,58 @@ class ArticaleController extends Controller
 
     }
 
+    public function update(ArticleRequest $request, $id)
+    {
+        $data = $request->validated();
+
+        try {
+            DB::beginTransaction();
+
+            $article = Article::with('sections')->find($id);
+            if (!$article) apiResponse(404, 'article not found');
+            $article->update([
+                'title' => $data['title'] ?? $article->title,
+                'type' => $data['type'] ?? $article->type,
+                'year' => $data['year'] ?? $article->year,
+                'category_id' => $data['category_id'] ?? $article->category_id,
+                'writer' => $data['writer'] ?? $article->writer,
+                'post_by' => $data['post_by'] ?? $article->post_by,
+                'references' => $data['references'] ?? $article->references,
+            ]);
+
+            if (isset($data['sections'])) {
+                foreach ($data['sections'] as $section) {
+                    $section['content'] = collect($section['content'])->map(function ($item) {
+                        if ($item['type'] === 'image' && $item['content'] instanceof \Illuminate\Http\UploadedFile) {
+                            $item['content'] = ImageManagement::uploadImage($item['content'], 'image');
+                        }
+                        if ($item['type'] === 'video' && $item['content'] instanceof \Illuminate\Http\UploadedFile) {
+                            $item['content'] = ImageManagement::uploadImage($item['content'], 'video');
+                        }
+                        return $item;
+                    })->toArray();
+
+                    $article->sections()->updateOrCreate(
+                        ['id' => $section['id'] ?? null],
+                        [
+                            'title' => $section['title'],
+                            'order' => $section['order'],
+                            'content' => $section['content'],
+                        ]
+                    );
+                }
+            }
+
+            $article->load('sections');
+
+            DB::commit();
+            return apiResponse(200, 'Article updated successfully', ArticleResource::make($article));
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return apiResponse(500, $e->getMessage());
+        }
+    }
 
     public function delete($id)
     {
