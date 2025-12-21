@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests\Article;
 
+use App\Http\Requests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ArticleRequest extends FormRequest
+class ArticleRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +29,7 @@ class ArticleRequest extends FormRequest
                 'string',
                 'max:200',
                 'min:5',
-                Rule::unique('articles', 'title')->ignore($this->route('id')),
+                Rule::unique('articles', 'title'),
             ],
             'type' => ['required', 'string', 'max:100', 'min:2'],
             'year' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],

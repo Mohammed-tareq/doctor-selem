@@ -36,9 +36,7 @@ class AdminBlogController extends Controller
 
     public function store(BlogRequest $request)
     {
-        $cleanData = array_map(function ($q) {
-            return is_string($q) ? strip_tags($q) : $q;
-        }, $request->validated());
+
         try {
             DB::beginTransaction();
             $blog = Blog::create([
@@ -61,17 +59,13 @@ class AdminBlogController extends Controller
             return apiResponse(201, 'blog created successfully', BlogResource::make($blog));
         } catch (\Exception $e) {
             DB::rollBack();
-
-            return apiResponse(500, 'An error occurred while creating the blog');
+            return apiResponse(500, $e->getMessage());
         }
     }
 
     public function update(BlogRequest $request, $id)
     {
-        return $request->validated();
-        $data = array_map(function ($q) {
-            return is_string($q) ? strip_tags($q) : $q;
-        }, $request->validated());
+
         try {
             $blog = Blog::find($id);
             if (!$blog) {

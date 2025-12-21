@@ -38,7 +38,6 @@ class ArticaleController extends Controller
         $data = array_map(function ($q) {
             return is_string($q) ? strip_tags($q) : $q;
         }, $request->validated());
-
         try {
             DB::beginTransaction();
 

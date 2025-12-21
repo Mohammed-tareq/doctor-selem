@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Audio;
 
+use App\Http\Requests\BaseRequest;
 use getID3;
-use Illuminate\Foundation\Http\FormRequest;
 
-class AudioRequest extends FormRequest
+class AudioRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.

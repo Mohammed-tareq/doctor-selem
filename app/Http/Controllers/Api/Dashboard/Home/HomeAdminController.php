@@ -16,18 +16,26 @@ class HomeAdminController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $articales = Article::select('num_view')->sum('num_view');
+        $articales = Article::count();
         $books = Book::count();
         $audios = Audio::count();
         $users = Subscribe::count();
 
-        $allUser = $articales + $books + $audios;
+        $Articales = Article::sum('num_view');
+        $Books = Book::sum('num_view');
+        $Audios = Audio::sum('num_view');
+
+        $mostView = max($Articales, $Books, $Audios);
+
+        $allUser = $Articales + $Books + $Audios;
 
         $data = [
             'articales' => $articales,
             'books' => $books,
             'audios' => $audios,
-            'users' => $users,
+            'user_subscribe' => $users,
+            'user_views' => $allUser,
+            'most_view' => $mostView,
         ];
         return apiResponse(200, 'success', $data);
 
