@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Project;
 use App\Models\Category;
+use App\Models\Project;
 use Illuminate\Database\Seeder;
 
 class ProjectSeeder extends Seeder
@@ -17,14 +17,14 @@ class ProjectSeeder extends Seeder
 
         if ($categories->isEmpty()) {
             // Create categories if they don't exist
-            $categories = Category::factory()->count(5)->create();
+            $categories = Category::factory()->count(40)->create();
         }
 
-        foreach ($categories as $category) {
-            Project::factory()->count(3)->create([
-                'category_id' => $category->id,
-            ]);
-        }
+
+        Project::factory()->count(40)->create([
+            'category_id' => $categories->random()->id,
+        ]);
     }
 }
+
 

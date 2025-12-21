@@ -22,6 +22,10 @@ class ImageManagement
                 $videoPath = self::generateImageName($request, 'articles/videos');
                 return $videoPath;
             endif;
+            if ($type === 'audio'):
+                $audioPath = self::generateImageName($request, 'audios');
+                return $audioPath;
+            endif;
         endif;
 
     }

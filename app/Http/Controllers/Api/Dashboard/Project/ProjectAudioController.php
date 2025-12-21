@@ -27,6 +27,7 @@ class ProjectAudioController extends Controller
     public function store(ProjectRequest $request)
     {
         $data = $request->except('image_cover');
+        $data['speaker'] = $request->speaker ?? auth()->user()->name;
         $project = Project::create($data);
         if (!$project) apiResponse(400, 'failed to create project');
         if ($request->hasFile('image_cover')) {
@@ -44,7 +45,7 @@ class ProjectAudioController extends Controller
                 return apiResponse(404, 'project not found');
             }
             $data = $request->except('image_cover');
-
+            $data['speaker'] = $request->speaker ?? auth()->user()->name;
             $project->update($data);
             if (!$project) {
                 return apiResponse(400, 'failed to update project');

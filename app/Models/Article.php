@@ -24,7 +24,7 @@ class Article extends Model
     {
         return [
             'year' => 'date',
-            'references' => 'json',
+            'references' => 'array',
         ];
     }
 

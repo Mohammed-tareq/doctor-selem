@@ -17,7 +17,7 @@ class Section extends Model
     ];
 
     protected $casts = [
-        'content' => 'json',
+        'content' => 'array',
     ];
 
    

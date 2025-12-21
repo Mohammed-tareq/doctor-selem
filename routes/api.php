@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Dashboard\Articale\ArticaleController;
+use App\Http\Controllers\Api\Dashboard\Audio\AdminAudioController;
 use App\Http\Controllers\Api\Dashboard\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Dashboard\Auth\LoginController;
 use App\Http\Controllers\Api\Dashboard\Auth\ResetPasswordController;
@@ -126,6 +127,14 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
         });
     });
     // =================================== end project ======================//
+
+    // =================================== Audio ======================//
+    Route::controller(AdminAudioController::class)->prefix('audio')->group(function () {
+            Route::post('/store', 'store');
+            Route::put('/update/{id}', 'update');
+            Route::delete('/delete/{id}', 'delete');
+        });
+    // =================================== end Audio ======================//
 
 
 });

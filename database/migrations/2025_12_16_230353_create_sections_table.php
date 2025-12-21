@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('order');
             $table->json('content');
             $table->foreignId('article_id')->constrained('articles')->onDelete('cascade');
-//            $table->unique(['article_id', 'title']);
+            $table->unique(['article_id', 'title']);
             $table->timestamps();
         });
     }

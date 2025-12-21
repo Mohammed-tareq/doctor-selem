@@ -20,20 +20,9 @@ class SectionFactory extends Factory
      */
     public function definition(): array
     {
-        // Arabic section titles
-        $arabicTitles = [
-            'المقدمة',
-            'الخلفية النظرية',
-            'المنهجية',
-            'النتائج',
-            'المناقشة',
-            'الخلاصة',
-            'المراجع',
-            'الملاحق',
-        ];
+        static $order = 1;
 
-        // Arabic content
-        $arabicContent = [
+        $sections = [
             [
                 'title' => 'المقدمة',
                 'type' => 'text',
@@ -42,54 +31,56 @@ class SectionFactory extends Factory
             [
                 'title' => 'الخلفية النظرية',
                 'type' => 'text',
-                'content' => 'مقدمة شاملة عن الموضوع المطروح',
+                'content' => [
+                    [
+                        'type' => 'text',
+                        'content' => 'تم اختاره في فصل الخريف'
+                    ],[
+                        'type' => 'image',
+                        'content' => asset('files/book1.webp')
+                    ],[
+                        'type' => 'video',
+                        'content' => 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+                    ]
+                ],
             ],
             [
                 'title' => 'المنهجية',
                 'type' => 'text',
                 'content' => 'مقدمة شاملة عن الموضوع المطروح',
-            ]
-            ,
+            ],
             [
                 'title' => 'النتائج',
                 'type' => 'image',
                 'content' => asset('files/book1.webp'),
-            ]
-            ,
+            ],
             [
                 'title' => 'المناقشة',
                 'type' => 'text',
                 'content' => 'مقدمة شاملة عن الموضوع المطروح',
-            ]
-            ,
+            ],
             [
                 'title' => 'الخلاصة',
                 'type' => 'text',
                 'content' => 'مقدمة شاملة عن الموضوع المطروح',
-            ]
-            ,
+            ],
             [
-                ['title' => 'المراجع',
-                    'type' => 'text',
-                    'content' => 'مقدمة شاملة عن الموضوع المطروح'],
-                [
-                    'title' => 'النتائج',
-                    'type' => 'image',
-                    'content' => asset('files/book1.webp'),
-                ]
-
-            ]
-            ,
-
+                'title' => 'المراجع',
+                'type' => 'text',
+                'content' => 'مقدمة شاملة عن الموضوع المطروح',
+            ],
         ];
 
+        $section = $sections[($order - 1) % count($sections)];
+
         return [
-            'title' => fake()->randomElement($arabicTitles),
-            'order' => fake()->numberBetween(1, 10),
-            'content' => fake()->randomElement($arabicContent),
+            'title' => $section['title'],
+            'order' => $order++,
+            'content' => $section,
             'article_id' => Article::factory(),
         ];
     }
+
 }
 
 

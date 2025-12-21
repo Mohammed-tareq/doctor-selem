@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    use HasFactory;
 
     protected $fillable = [
         'title',
@@ -29,7 +28,7 @@ class Book extends Model
     {
         return [
             'date' => 'date',
-            'images' => 'json',
+            'images' => 'array',
         ];
     }
 

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Audio extends Model
 {
-    use HasFactory;
     protected $table = 'audios';
 
     protected $fillable = [
@@ -15,7 +14,6 @@ class Audio extends Model
         'content',
         'details',
         'project_id',
-        'type',
         'num_view'
     ];
 

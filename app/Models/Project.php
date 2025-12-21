@@ -13,6 +13,7 @@ class Project extends Model
         'title',
         'image_cover',
         'category_id',
+        'speaker',
     ];
 
     /**

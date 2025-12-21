@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->unique();
             $table->string('image_cover')->nullable();
+            $table->string('speaker');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->timestamps();
         });
