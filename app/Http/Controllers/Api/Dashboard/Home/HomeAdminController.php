@@ -16,10 +16,12 @@ class HomeAdminController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $articales = Article::count();
+        $articales = Article::select('num_view')->sum('num_view');
         $books = Book::count();
         $audios = Audio::count();
         $users = Subscribe::count();
+
+        $allUser = $articales + $books + $audios;
 
         $data = [
             'articales' => $articales,

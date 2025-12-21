@@ -32,13 +32,13 @@ class ImageManagement
 
     public static function storeBlogImage($request, $blog)
     {
-        if ($book && ($request->hasFile('image_cover') || $request->has('image_content'))):
-            self::deleteImage($book->image_cover);;
-            self::deleteImage($book->image_content);
+        if ($blog && ($request->hasFile('image_cover') || $request->has('image_content'))):
+            self::deleteImage($blog->image_cover);;
+            self::deleteImage($blog->image_content);
             $coverPath = self::generateImageName($request->image_cover, 'Blogs');
             $contentPath = self::generateImageName($request->image_content, 'Blogs');
 
-            $book->update([
+            $blog->update([
                 'image_cover' => $coverPath,
                 'image_content' => $contentPath,
             ]);

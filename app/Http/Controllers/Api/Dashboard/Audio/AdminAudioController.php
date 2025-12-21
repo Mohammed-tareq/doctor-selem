@@ -80,7 +80,7 @@ class AdminAudioController extends Controller
     public function delete($id)
     {
         $audio = Audio::find($id);
-        if (!$audio) apiResponse(404, 'audio not found');
+        if (!$audio) return apiResponse(404, 'audio not found');
         ImageManagement::deleteImage($audio->content);
         $audio->delete();
         return apiResponse(200, 'audio deleted successfully');

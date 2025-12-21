@@ -21,7 +21,7 @@ class ArticaleController extends Controller
         $articles = Article::when($search, fn($query) => $query->where('title', 'like', "%{$search}%"))
             ->latest()
             ->paginate($per_page);
-        if ($articles->isEmpty()) apiResponse(404, 'articles not found');
+        if ($articles->isEmpty()) return apiResponse(404, 'articles not found');
 
         return apiResponse(200, 'success', new  ArticleCollection($articles));
     }
@@ -29,7 +29,7 @@ class ArticaleController extends Controller
     public function show($id)
     {
         $article = Article::with(['sections', 'category'])->find($id);
-        if (!$article) apiResponse(404, 'article not found');
+        if (!$article) return apiResponse(404, 'article not found');
         return apiResponse(200, 'success', ArticleResource::make($article));
 
     }
@@ -37,8 +37,10 @@ class ArticaleController extends Controller
     public function store(ArticleRequest $request)
     {
         $data = $request->validated();
+
         try {
             DB::beginTransaction();
+
             $article = Article::create([
                 'title' => $data['title'],
                 'type' => $data['type'],
@@ -47,11 +49,12 @@ class ArticaleController extends Controller
                 'writer' => $data['writer'] ?? auth()->user()->name,
                 'post_by' => $data['post_by'],
                 'references' => $data['references'] ?? null,
-
             ]);
+
             if (!$article) return apiResponse(500, 'Internal server error');
-            $sections = collect($data['sections'])->map(function ($section) {
-                $section['content'] = collect($section['content'])->map(function ($item) {
+
+            $sections = collect($data['sections'] ?? [])->map(function ($section) {
+                $section['content'] = collect($section['content'] ?? [])->map(function ($item) {
                     if ($item['type'] === 'image' && $item['content'] instanceof \Illuminate\Http\UploadedFile) {
                         $item['content'] = ImageManagement::uploadImage($item['content'], 'image');
                     }
@@ -66,14 +69,17 @@ class ArticaleController extends Controller
 
             $article->sections()->createMany($sections);
             $article->load('sections');
-            if (!$article->exists()) return apiResponse(500, 'Internal server error');
+
             DB::commit();
+
             return apiResponse(200, 'Article created successfully', ArticleResource::make($article));
+
+
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e->getMessage());
             return apiResponse(500, 'Internal server error');
         }
-
     }
 
     public function update(ArticleRequest $request, $id)
@@ -84,7 +90,7 @@ class ArticaleController extends Controller
             DB::beginTransaction();
 
             $article = Article::with('sections')->find($id);
-            if (!$article) apiResponse(404, 'article not found');
+            if (!$article) return apiResponse(404, 'article not found');
             $article->update([
                 'title' => $data['title'] ?? $article->title,
                 'type' => $data['type'] ?? $article->type,

@@ -21,7 +21,7 @@ class AdminBlogController extends Controller
         $blogs = Blog::when($serach, fn($q) => $q->where('title', 'like', "%{$serach}%"))
             ->latest()
             ->paginate($per_page);
-        if ($blogs->isEmpty()) apiResponse(404, 'blogs not found');
+        if ($blogs->isEmpty()) return apiResponse(404, 'blogs not found');
         return apiResponse(200, 'success', new BlogCollection($blogs));
     }
 
@@ -29,7 +29,7 @@ class AdminBlogController extends Controller
     public function show($id)
     {
         $blog = Blog::with('category')->find($id);
-        if (!$blog) apiResponse(404, 'blog not found');
+        if (!$blog) return apiResponse(404, 'blog not found');
         $blog->increment('num_view');
         return apiResponse(200, 'success', BlogResource::make($blog));
     }
@@ -43,6 +43,7 @@ class AdminBlogController extends Controller
             if (!$blog) {
                 return apiResponse(400, 'failed to create blog');
             }
+
 
             if ($request->hasFile('image_cover') || $request->has('image_content')) {
                 ImageManagement::storeBlogImage($request, $blog);
@@ -60,6 +61,7 @@ class AdminBlogController extends Controller
 
     public function update(BlogRequest $request, $id)
     {
+        return $request;
         try {
             $blog = Blog::find($id);
             if (!$blog) {
@@ -69,7 +71,7 @@ class AdminBlogController extends Controller
             DB::beginTransaction();
             $data = $request->except('image_cover', 'image_content');
             $blog->update($data);
-            if ($request->hasFile('image_cover') || $request->has('image_content')) {
+                if ($request->hasFile('image_cover') || $request->has('image_content')) {
                 ImageManagement::storeBlogImage($request, $blog);
             }
             $blog->load('category');
