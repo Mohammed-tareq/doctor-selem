@@ -20,6 +20,7 @@ class HomeAdminController extends Controller
         $books = Book::count();
         $audios = Audio::count();
         $users = Subscribe::count();
+
         $data = [
             'articales' => $articales,
             'books' => $books,
