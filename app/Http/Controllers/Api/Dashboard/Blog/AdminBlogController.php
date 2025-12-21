@@ -70,8 +70,16 @@ class AdminBlogController extends Controller
 
             DB::beginTransaction();
             $data = $request->except('image_cover', 'image_content');
-            $blog->update($data);
-                if ($request->hasFile('image_cover') || $request->has('image_content')) {
+            $blog->update([
+                'title' => $data['title'] ?? $blog->title,
+                'category_id' => $data['category_id'] ?? $blog->category_id,
+                'content' => $data['content'] ?? $blog->content,
+                'num_view' => $blog->num_view,
+                'type' => $data['type'] ?? $blog->type,
+                'date' => $data['date'] ?? $blog->date,
+                'publisher' => $data['publisher'] ?? $blog->publisher,
+            ]);
+            if ($request->hasFile('image_cover') || $request->has('image_content')) {
                 ImageManagement::storeBlogImage($request, $blog);
             }
             $blog->load('category');
