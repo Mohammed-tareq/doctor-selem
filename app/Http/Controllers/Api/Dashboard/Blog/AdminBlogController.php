@@ -66,6 +66,7 @@ class AdminBlogController extends Controller
     public function update(BlogRequest $request, $id)
     {
 
+        if (!$request->validated()) return apiResponse(422, 'validation error');
         try {
             $blog = Blog::find($id);
             if (!$blog) {

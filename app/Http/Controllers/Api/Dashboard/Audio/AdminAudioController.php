@@ -49,9 +49,7 @@ class AdminAudioController extends Controller
 
     public function update(AudioRequest $request, $id)
     {
-        $data = array_map(function ($q) {
-            return is_string($q) ? strip_tags($q) : $q;
-        }, $request->validated());
+       if (!$request->validated()) return apiResponse(422, 'validation error');
 
         try {
             $audio = Audio::find($id);

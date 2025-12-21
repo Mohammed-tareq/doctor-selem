@@ -35,9 +35,6 @@ class BookAdminController extends Controller
 
     public function store(BookRequest $request)
     {
-        $data = array_map(function ($q) {
-            return is_string($q) ? strip_tags($q) : $q;
-        }, $request->validated());
 
         try {
             DB::beginTransaction();
@@ -75,9 +72,7 @@ class BookAdminController extends Controller
 
     public function update(BookRequest $request, $id)
     {
-        $data = array_map(function ($q) {
-            return is_string($q) ? strip_tags($q) : $q;
-        }, $request->validated());
+        if (!$request->validated()) return apiResponse(422, 'validation error');
         try {
             DB::beginTransaction();
 

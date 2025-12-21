@@ -78,6 +78,7 @@ class ArticleRequest extends BaseRequest
         ];
         if (in_array($this->method(), ['PUT', 'PATCH'])) {
             $rules['title'][0] = 'sometimes';
+            $rules['title'][4] = Rule::unique('articles', 'title')->ignore($this->route('id'));
             $rules['type'][0] = 'sometimes';
             $rules['year'][0] = 'sometimes';
             $rules['category_id'][0] = 'sometimes';
