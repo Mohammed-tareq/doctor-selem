@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Article;
 
 use App\Http\Requests\BaseRequest;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class ArticleRequest extends BaseRequest
@@ -42,11 +41,10 @@ class ArticleRequest extends BaseRequest
 
             'sections.*.title' => ['required', 'string', 'max:200', 'min:3'],
             'sections.*.order' => ['required', 'integer', 'min:1'],
-//            'sections.*.article_id' => ['required', 'exists:articles,id'],
 
             // content array
             'sections.*.content' => ['required', 'array'],
-            'sections.*.content.*.type' => ['required', 'string', 'in:text,image,video'],
+            'sections.*.content.*.type' => ['required', 'string', 'in:text,image,video,link'],
             'sections.*.content.*.content' => [
                 'required',
                 function ($attribute, $value, $fail) {
@@ -73,9 +71,13 @@ class ArticleRequest extends BaseRequest
                             $fail($validator->errors()->first($attribute));
                         }
                     }
+                    if (str_contains($attribute, 'link') && !filter_var($value, FILTER_VALIDATE_URL)) {
+                        $fail('الرابط داخل المحتوى يجب أن يكون رابط صالح.');
+                    }
                 }
             ],
         ];
+
         if (in_array($this->method(), ['PUT', 'PATCH'])) {
             $rules['title'][0] = 'sometimes';
             $rules['title'][4] = Rule::unique('articles', 'title')->ignore($this->route('id'));
@@ -90,7 +92,6 @@ class ArticleRequest extends BaseRequest
         return $rules;
 
     }
-
 
 
     public function messages()

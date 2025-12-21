@@ -35,6 +35,8 @@ class ArticaleController extends Controller
 
     public function store(ArticleRequest $request)
     {
+        if(!$request->validated()) return apiResponse(422, 'validation error');
+        $data = $request->validated();
         try {
             DB::beginTransaction();
 
@@ -49,6 +51,15 @@ class ArticaleController extends Controller
             ]);
 
             if (!$article) return apiResponse(500, 'Internal server error');
+
+            $article->load('sections');
+            foreach ($article->sections() as $section) {
+                collect($section->content)->each(function ($item) {
+                    if (is_array($item) && ($item['type'] ?? null) === 'image' && isset($item['content'])) {
+                        ImageManagement::deleteImage($item['content']);
+                    }
+                });
+            }
 
             $sections = collect($data['sections'] ?? [])->map(function ($section) {
                 $section['content'] = collect($section['content'] ?? [])->map(function ($item) {
@@ -68,11 +79,11 @@ class ArticaleController extends Controller
             $article->load('sections');
 
             DB::commit();
+            $article->total_word_count = $this->getArticle($article->id);
 
             return apiResponse(200, 'Article created successfully', ArticleResource::make($article));
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
             return apiResponse(500, 'Internal server error');
         }
     }
@@ -80,7 +91,7 @@ class ArticaleController extends Controller
     public function update(ArticleRequest $request, $id)
     {
        if(!$request->validated()) return apiResponse(422, 'validation error');
-
+        $data = $request->validated();
         try {
             DB::beginTransaction();
 
@@ -146,5 +157,67 @@ class ArticaleController extends Controller
         });
         $article->delete();
         return apiResponse(200, 'article deleted successfully');
+    }
+
+    protected function getArticle($id)
+    {
+        $article = Article::with([
+            'sections',
+            'category:id,title'
+        ])->find($id);
+
+        if (!$article) {
+            return apiResponse(404, 'Article not found');
+        }
+
+        $totalSectionsWords = 0;
+
+        $article->sections = $article->sections->map(function ($section) use (&$totalSectionsWords) {
+
+            $section->word_count = 0;
+            $content = $section->content; // already casted to array
+
+            if (!$content) {
+                return $section;
+            }
+
+            if (isset($content['type'])) {
+                if ($content['type'] === 'text') {
+                    $section->word_count = str_word_count(
+                        strip_tags($content['content'] ?? ''),
+                        0,
+                        'أ-ي'
+                    );
+                }
+            }
+            else {
+                foreach ($content as $item) {
+                    if (($item['type'] ?? null) === 'text') {
+                        $section->word_count += str_word_count(
+                            strip_tags($item['content'] ?? ''),
+                            0,
+                            'أ-ي'
+                        );
+                    }
+                }
+            }
+
+            $totalSectionsWords += $section->word_count;
+
+            return $section;
+        });
+
+        $referencesText = is_array($article->references)
+            ? implode(' ', $article->references)
+            : ($article->references ?? '');
+
+        $referencesWordCount = str_word_count(
+            strip_tags($referencesText),
+            0,
+            'أ-ي'
+        );
+
+        $article->total_word_count = $totalSectionsWords + $referencesWordCount;
+        return $article->total_word_count;
     }
 }

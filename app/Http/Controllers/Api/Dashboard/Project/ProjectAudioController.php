@@ -26,9 +26,8 @@ class ProjectAudioController extends Controller
 
     public function store(ProjectRequest $request)
     {
-        $data = array_map(function ($q) {
-            return is_string($q) ? strip_tags($q) : $q;
-        }, $request->validated());
+        if (!$request->validated()) return apiResponse(422, 'validation error');
+        $data = $request->validated();
 
         $data['speaker'] = $request->speaker ?? auth()->user()->name;
         $project = Project::create([
@@ -45,9 +44,8 @@ class ProjectAudioController extends Controller
 
     public function update(projectRequest $request, $id)
     {
-        $data = array_map(function ($q) {
-            return is_string($q) ? strip_tags($q) : $q;
-        }, $request->validated());
+        if (!$request->validated()) return apiResponse(422, 'validation error');
+        $data = $request->validated();
         try {
             DB::beginTransaction();
             $project = Project::find($id);

@@ -12,6 +12,7 @@ class LoginController extends Controller
 {
     public function login(LoginRequest $request)
     {
+        if (!$request->validated()) return apiResponse(422, 'validation error');
         $data = $request->validated();
 
         if (RateLimiter::tooManyAttempts($request->ip(), 3)) {

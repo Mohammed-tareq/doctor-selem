@@ -36,6 +36,8 @@ class AdminBlogController extends Controller
 
     public function store(BlogRequest $request)
     {
+        if (!$request->validated()) return apiResponse(422, 'validation error');
+        $cleanData = $request->validated();
 
         try {
             DB::beginTransaction();
@@ -67,6 +69,7 @@ class AdminBlogController extends Controller
     {
 
         if (!$request->validated()) return apiResponse(422, 'validation error');
+        $data = $request->validated();
         try {
             $blog = Blog::find($id);
             if (!$blog) {

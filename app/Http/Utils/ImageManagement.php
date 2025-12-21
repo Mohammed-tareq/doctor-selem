@@ -13,12 +13,10 @@ class ImageManagement
 
         if ($request instanceof UploadedFile):
             if ($type === 'image'):
-                self::deleteImage($request->image);
                 $imagePath = self::generateImageName($request, 'articles/images');
                 return $imagePath;
             endif;
             if ($type === 'video'):
-                self::deleteImage($request->video);
                 $videoPath = self::generateImageName($request, 'articles/videos');
                 return $videoPath;
             endif;
@@ -33,8 +31,6 @@ class ImageManagement
     public static function storeBlogImage($request, $blog)
     {
         if ($blog && ($request->hasFile('image_cover') || $request->has('image_content'))):
-            self::deleteImage($blog->image_cover);;
-            self::deleteImage($blog->image_content);
             $coverPath = self::generateImageName($request->image_cover, 'Blogs');
             $contentPath = self::generateImageName($request->image_content, 'Blogs');
 
@@ -42,6 +38,8 @@ class ImageManagement
                 'image_cover' => $coverPath,
                 'image_content' => $contentPath,
             ]);
+            self::deleteImage($blog->image_cover);;
+            self::deleteImage($blog->image_content);
         endif;
     }
 
@@ -52,12 +50,12 @@ class ImageManagement
             foreach ($request->images as $image):
                 $path[] = self::generateImageName($image, 'books');
             endforeach;
+            $book->update(['images' => $path]);
             if ($book->images):
                 foreach ($book->images as $oldimages) {
                     self::deleteImage($oldimages);
                 }
             endif;
-            $book->update(['images' => $path]);
         endif;
         return;
     }
@@ -65,12 +63,42 @@ class ImageManagement
     public static function storeProjectImage($request, $project)
     {
         if ($project && $request->hasFile('image_cover')):
-            self::deleteImage($project->image_cover);
             $coverPath = self::generateImageName($request->image_cover, 'Projects');
-
+            if (!$coverPath) return;
+            self::deleteImage($project->image_cover);
             $project->update([
                 'image_cover' => $coverPath,
             ]);
+        endif;
+    }
+
+    public static function StoreUserImage($request, $user)
+    {
+        if ($user && $request->hasFile('image_cover')):
+            $coverPath = self::generateImageName($request->image_cover, 'Users');
+            if (!$coverPath) return;
+            self::deleteImage($user->image_cover);
+
+            $user->update([
+                'image_cover' => $coverPath,
+            ]);
+        endif;
+        $path = [];
+            if ($user && $request->hasFile('images')):
+                foreach ($request->images as $index => $image) {
+                    {
+                        $path[] = self::generateImageName($image, 'Users');
+                        if (!$path[$index]) return;
+                        self::deleteImage($image);
+                    }
+                }
+                $user->update(['images' => $path]);
+            endif;
+        if ($user && $request->hasFile('cv')):
+            $cvPath = self::generateImageName($request->cv, 'Users/cv');
+            if (!$cvPath) return;
+            self::deleteImage($user->cv);
+            $user->update(['cv' => $cvPath]);
         endif;
     }
 

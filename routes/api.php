@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Dashboard\Book\BookAdminController;
 use App\Http\Controllers\Api\Dashboard\Category\CategoryController;
 use App\Http\Controllers\Api\Dashboard\Home\HomeAdminController;
 use App\Http\Controllers\Api\Dashboard\Project\ProjectAudioController;
+use App\Http\Controllers\Api\Dashboard\User\AdminDataController;
 use App\Http\Controllers\Api\FrontEnd\Article\ArticleController;
 use App\Http\Controllers\Api\FrontEnd\Audio\AudioController;
 use App\Http\Controllers\Api\FrontEnd\Blog\BlogController;
@@ -66,8 +67,9 @@ Route::post('/reset-password', ResetPasswordController::class);
 
 Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
 
-    Route::get('/user', function () {
-        return auth()->user();
+    Route::prefix('user')->controller(AdminDataController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::put('/update', 'update');
     });
     Route::delete('/logout', [LoginController::class, 'logout']);
 
@@ -77,7 +79,14 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     // =================================== end home page admin ======================//
 
     //=============================== get categories ================================//
-    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::controller(CategoryController::class)->group(function () {
+        Route::get('/categories', 'index');
+        Route::prefix('category')->group(function () {
+            Route::post('/store', 'store');
+            Route::put('/update/{id}', 'update');
+            Route::delete('/delete/{id}', 'delete');
+        });
+    });
     //=============================== end categories ================================//
 
     // =================================== articles ======================//
@@ -130,10 +139,10 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
 
     // =================================== Audio ======================//
     Route::controller(AdminAudioController::class)->prefix('audio')->group(function () {
-            Route::post('/store', 'store');
-            Route::put('/update/{id}', 'update');
-            Route::delete('/delete/{id}', 'delete');
-        });
+        Route::post('/store', 'store');
+        Route::put('/update/{id}', 'update');
+        Route::delete('/delete/{id}', 'delete');
+    });
     // =================================== end Audio ======================//
 
 

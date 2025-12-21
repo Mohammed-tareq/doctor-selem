@@ -35,6 +35,8 @@ class BookAdminController extends Controller
 
     public function store(BookRequest $request)
     {
+        if (!$request->validated()) return apiResponse(422, 'validation error');
+        $data = $request->validated();
 
         try {
             DB::beginTransaction();
@@ -73,6 +75,7 @@ class BookAdminController extends Controller
     public function update(BookRequest $request, $id)
     {
         if (!$request->validated()) return apiResponse(422, 'validation error');
+        $data = $request->validated();
         try {
             DB::beginTransaction();
 

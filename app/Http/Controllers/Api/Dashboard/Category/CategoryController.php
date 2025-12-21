@@ -13,7 +13,7 @@ class CategoryController extends Controller
         return apiResponse(200, 'success', $categories);
     }
 
-    public function create()
+    public function store()
     {
         $data = request()->validate([
             'title' => 'required|string|max:50|min:3|unique:categories,title',
