@@ -26,9 +26,16 @@ class ProjectAudioController extends Controller
 
     public function store(ProjectRequest $request)
     {
-        $data = $request->except('image_cover');
+        $data = array_map(function ($q) {
+            return is_string($q) ? strip_tags($q) : $q;
+        }, $request->validated());
+
         $data['speaker'] = $request->speaker ?? auth()->user()->name;
-        $project = Project::create($data);
+        $project = Project::create([
+            'title' => $data['title'],
+            'category_id' => $data['category_id'],
+            'speaker' => $data['speaker'],
+        ]);
         if (!$project) apiResponse(400, 'failed to create project');
         if ($request->hasFile('image_cover')) {
             ImageManagement::storeProjectImage($request, $project);
@@ -38,6 +45,9 @@ class ProjectAudioController extends Controller
 
     public function update(projectRequest $request, $id)
     {
+        $data = array_map(function ($q) {
+            return is_string($q) ? strip_tags($q) : $q;
+        }, $request->validated());
         try {
             DB::beginTransaction();
             $project = Project::find($id);
@@ -46,7 +56,11 @@ class ProjectAudioController extends Controller
             }
             $data = $request->except('image_cover');
             $data['speaker'] = $request->speaker ?? auth()->user()->name;
-            $project->update($data);
+            $project->update([
+                'title' => $data['title'] ?? $project->title,
+                'category_id' => $data['category_id'] ?? $project->category_id,
+                'speaker' => $data['speaker'] ?? $project->speaker,
+            ]);
             if (!$project) {
                 return apiResponse(400, 'failed to update project');
             }

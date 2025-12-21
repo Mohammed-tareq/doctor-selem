@@ -31,12 +31,13 @@ class ArticaleController extends Controller
         $article = Article::with(['sections', 'category'])->find($id);
         if (!$article) return apiResponse(404, 'article not found');
         return apiResponse(200, 'success', ArticleResource::make($article));
-
     }
 
     public function store(ArticleRequest $request)
     {
-        $data = $request->validated();
+        $data = array_map(function ($q) {
+            return is_string($q) ? strip_tags($q) : $q;
+        }, $request->validated());
 
         try {
             DB::beginTransaction();
@@ -73,8 +74,6 @@ class ArticaleController extends Controller
             DB::commit();
 
             return apiResponse(200, 'Article created successfully', ArticleResource::make($article));
-
-
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
@@ -84,7 +83,9 @@ class ArticaleController extends Controller
 
     public function update(ArticleRequest $request, $id)
     {
-        $data = $request->validated();
+        $data  = array_map(function ($q) {
+            return is_string($q) ? strip_tags($q) : $q;
+        }, $request->validated());
 
         try {
             DB::beginTransaction();
@@ -128,7 +129,6 @@ class ArticaleController extends Controller
 
             DB::commit();
             return apiResponse(200, 'Article updated successfully', ArticleResource::make($article));
-
         } catch (\Exception $e) {
             DB::rollBack();
             return apiResponse(500, $e->getMessage());

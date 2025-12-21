@@ -16,7 +16,6 @@ class Book extends Model
         'link',
         'publishing_house',
         'date',
-        'type',
         'edition_number',
         'pages',
         'category_id',

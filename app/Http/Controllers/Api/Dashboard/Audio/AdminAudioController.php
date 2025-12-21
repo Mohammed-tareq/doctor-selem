@@ -15,15 +15,18 @@ class AdminAudioController extends Controller
 
     public function store(AudioRequest $request)
     {
+        $data = array_map(function ($q) {
+            return is_string($q) ? strip_tags($q) : $q;
+        }, $request->validated());
         try {
             $project = Project::find($request->project_id ?? null);
             if (!$project) return apiResponse(404, 'project not found');
 
             DB::beginTransaction();
             $audio = $project->audios()->create([
-                'title' => $request->title,
-                'category_id' => $request->category_id,
-                'details' => $request->details,
+                'title' => $data['title'],
+                'category_id' => $data['category_id'],
+                'details' => $data['details'],
             ]);
             if (!$audio) return apiResponse(500, 'Internal server error');
 
@@ -34,7 +37,6 @@ class AdminAudioController extends Controller
                 $duration = isset($fileInfo['playtime_seconds']) ? $fileInfo['playtime_seconds'] : null;
                 $audio->duration = $duration;
 
-                $audio->save();
                 $audio->save();
             }
             DB::commit();
@@ -47,13 +49,21 @@ class AdminAudioController extends Controller
 
     public function update(AudioRequest $request, $id)
     {
+        $data = array_map(function ($q) {
+            return is_string($q) ? strip_tags($q) : $q;
+        }, $request->validated());
+
         try {
             $audio = Audio::find($id);
             if (!$audio) return apiResponse(404, 'audio not found');
 
             DB::beginTransaction();
 
-            $audio->update($request->except('content'));
+            $audio->update([
+                'title' => $data['title'] ?? $audio->title,
+                'category_id' => $data['category_id'] ?? $audio->category_id,
+                'details' => $data['details'] ?? $audio->details,
+            ]);
 
             if ($request->hasFile('content')) {
                 if ($audio->content) {

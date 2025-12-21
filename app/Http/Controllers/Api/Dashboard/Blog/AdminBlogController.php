@@ -36,14 +36,21 @@ class AdminBlogController extends Controller
 
     public function store(BlogRequest $request)
     {
+        $cleanData = array_map(function ($q) {
+            return is_string($q) ? strip_tags($q) : $q;
+        }, $request->validated());
         try {
             DB::beginTransaction();
-            $data = $request->except('image_cover', 'image_content');
-            $blog = Blog::create($data);
+            $blog = Blog::create([
+                'title' => $cleanData['title'],
+                'category_id' => $cleanData['category_id'],
+                'content' => $cleanData['content'],
+                'date' => $cleanData['date'],
+                'publisher' => $cleanData['publisher'],
+            ]);
             if (!$blog) {
                 return apiResponse(400, 'failed to create blog');
             }
-
 
             if ($request->hasFile('image_cover') || $request->has('image_content')) {
                 ImageManagement::storeBlogImage($request, $blog);
@@ -61,7 +68,10 @@ class AdminBlogController extends Controller
 
     public function update(BlogRequest $request, $id)
     {
-        return $request;
+        return $request->validated();
+        $data = array_map(function ($q) {
+            return is_string($q) ? strip_tags($q) : $q;
+        }, $request->validated());
         try {
             $blog = Blog::find($id);
             if (!$blog) {
@@ -69,7 +79,6 @@ class AdminBlogController extends Controller
             }
 
             DB::beginTransaction();
-            $data = $request->except('image_cover', 'image_content');
             $blog->update([
                 'title' => $data['title'] ?? $blog->title,
                 'category_id' => $data['category_id'] ?? $blog->category_id,

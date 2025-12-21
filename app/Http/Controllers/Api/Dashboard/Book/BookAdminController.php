@@ -35,9 +35,25 @@ class BookAdminController extends Controller
 
     public function store(BookRequest $request)
     {
+        $data = array_map(function ($q) {
+            return is_string($q) ? strip_tags($q) : $q;
+        }, $request->validated());
+
         try {
             DB::beginTransaction();
-            $book = Book::create($request->except('images'));
+            $book = Book::create([
+                'title' => $data['title'],
+                'lang' => $data['lang'],
+                'summary' => $data['summary'],
+                'link' => $data['link'],
+                'publishing_house' => $data['publishing_house'],
+                'date' => $data['date'],
+                'edition_number' => $data['edition_number'],
+                'pages' => $data['pages'],
+                'category_id' => $data['category_id'],
+                'goals' => $data['goals'],
+
+            ]);
 
             if (!$book) {
                 return apiResponse(400, 'failed to create book');
@@ -59,6 +75,9 @@ class BookAdminController extends Controller
 
     public function update(BookRequest $request, $id)
     {
+        $data = array_map(function ($q) {
+            return is_string($q) ? strip_tags($q) : $q;
+        }, $request->validated());
         try {
             DB::beginTransaction();
 
@@ -67,7 +86,18 @@ class BookAdminController extends Controller
                 return apiResponse(404, 'book not found');
             }
 
-            $book->update($request->except('images'));
+            $book->update([
+                'title' => $data['title'] ?? $book->title,
+                'lang' => $data['lang'] ?? $book->lang,
+                'summary' => $data['summary'] ?? $book->summary,
+                'link' => $data['link'] ?? $book->link,
+                'publishing_house' => $data['publishing_house'] ?? $book->publishing_house,
+                'date' => $data['date'] ?? $book->date,
+                'edition_number' => $data['edition_number'] ?? $book->edition_number,
+                'pages' => $data['pages'] ?? $book->pages,
+                'category_id' => $data['category_id'] ?? $book->category_id,
+                'goals' => $data['goals'] ?? $book->goals,
+            ]);
 
             if ($request->hasFile('images')) {
                 ImageManagement::storeBook($request, $book);
