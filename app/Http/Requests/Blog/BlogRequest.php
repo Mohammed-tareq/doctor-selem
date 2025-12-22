@@ -43,10 +43,10 @@ class BlogRequest extends FormRequest
                 "unique:blogs,title",
                 "regex:{$this->textRegex}", // حروف عربي وانجليزي وأرقام بس
             ],
-            "content" => "required|string|min:20|regex:{$this->textRegex}",
+            "content" => "required|string|min:20|not_regex:/<[^>]*>/",
             "image_cover" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "image_content" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "date" => "required|date|date_format:Y",
+            "date" => "required|integer|date_format:Y",
             "publisher" => "required|string|max:255|regex:{$this->textRegex}",
             "category_id" => "required|exists:categories,id",
         ];
@@ -63,7 +63,7 @@ class BlogRequest extends FormRequest
                 Rule::unique("blogs", "title")->ignore($this->route("id")),
                 "regex:{$this->textRegex}",
             ],
-            "content" => "sometimes|string|min:20|regex:{$this->textRegex}",
+            "content" => "sometimes|string|min:20|not_regex:/<[^>]*>/",
             "image_cover" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "image_content" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "date" => "sometimes|date|date_format:Y",

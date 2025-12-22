@@ -46,14 +46,16 @@ return [
             'throw' => false,
             'report' => false,
         ],
-        'store' => [
-            'driver' => 'local',
-            'root' => public_path('/'),
-            'url' => env('APP_URL').'/',
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
-        ],
+
+            'store' => [
+                'driver' => 'local',
+                'root' => public_path('/'),
+                'url' => env('APP_URL').'/',
+                'visibility' => 'public',
+                'throw' => false,
+                'report' => false,
+            ],
+
 
         's3' => [
             'driver' => 's3',

@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 
 // =================================  User info ===========================//
-Route::get('/home-info', UserInfoController::class);
+Route::get('/home-info', UserInfoController::class)->middleware('throttle:limiter');
 // =================================== end User info ===========================//
 // ================================== Artilces ===========================//
 Route::prefix('articles')->controller(ArticleController::class)->group(function () {

@@ -85,7 +85,7 @@ class AdminBlogController extends Controller
                 'date' => $data['date'] ?? $blog->date,
                 'publisher' => $data['publisher'] ?? $blog->publisher,
             ]);
-            if ($request->hasFile('image_cover') || $request->has('image_content')) {
+            if ($request->hasFile('image_cover') || $request->hasFile('image_content')) {
                 ImageManagement::storeBlogImage($request, $blog);
             }
             $blog->load('category');
@@ -93,7 +93,7 @@ class AdminBlogController extends Controller
             return apiResponse(200, 'blog updated successfully', BlogResource::make($blog));
         } catch (\Exception $e) {
             DB::rollBack();
-            return apiResponse(500, $e->getMessage());
+            return apiResponse(500, 'Internal server error');
         }
     }
 

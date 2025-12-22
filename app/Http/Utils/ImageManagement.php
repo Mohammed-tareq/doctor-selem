@@ -25,7 +25,6 @@ class ImageManagement
                 return $audioPath;
             endif;
         endif;
-
     }
 
     public static function storeBlogImage($request, $blog)
@@ -119,16 +118,14 @@ class ImageManagement
         endif;
     }
 
-    public
-    static function deleteImage($image)
+   public static function deleteImage($image)
     {
         if (File::exists(public_path($image))):
             File::delete(public_path($image));
         endif;
     }
 
-    protected
-    static function generateImageName($file, $path)
+    protected static function generateImageName($file, $path)
     {
         $fileName = Str::uuid() . time() . '.' . $file->getClientOriginalExtension();
         return $file->storeAs('uploads/' . $path, $fileName, ['disk' => 'store']);
