@@ -2,34 +2,20 @@
 
 namespace App\Http\Requests\Article;
 
-use App\Http\Requests\BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ArticleRequest extends BaseRequest
+class ArticleRequest extends FormRequest
 {
+    protected string $textRegex =
+        "/^[a-zA-Z0-9\s\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF},.!?؛،\-_()]+$/u";
+
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * تحضير البيانات قبل التحقق (تحويل order إلى integer)
-     */
-    protected function prepareForValidation(): void
-    {
-        $data = $this->all();
 
-        // تحويل order في كل قسم إلى رقم صحيح
-        if (isset($data['sections']) && is_array($data['sections'])) {
-            foreach ($data['sections'] as $index => $section) {
-                if (isset($section['order'])) {
-                    $data['sections'][$index]['order'] = (int) $section['order'];
-                }
-            }
-        }
-
-        $this->replace($data);
-    }
 
     public function rules(): array
     {
@@ -40,17 +26,18 @@ class ArticleRequest extends BaseRequest
                 'max:200',
                 'min:5',
                 Rule::unique('articles', 'title'),
+                "regex:{$this->textRegex}",
             ],
-            'type' => ['required', 'string', 'max:100', 'min:2'],
+            'type' => ['required', 'string', 'max:100', 'min:2',"regex:{$this->textRegex}"],
             'year' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
             'category_id' => ['required', 'exists:categories,id'],
-            'writer' => ['required', 'string', 'max:100', 'min:5'],
-            'post_by' => ['required', 'string', 'max:100', 'min:5'],
+            'writer' => ['required', 'string', 'max:100', 'min:5',"regex:{$this->textRegex}"],
+            'post_by' => ['required', 'string', 'max:100', 'min:5',"regex:{$this->textRegex}"],
             'references' => ['sometimes', 'array'],
 
             'sections' => ['required', 'array'],
 
-            'sections.*.title' => ['required', 'string', 'max:200', 'min:3'],
+            'sections.*.title' => ['required', 'string', 'max:200', 'min:3',"regex:{$this->textRegex}"],
             'sections.*.order' => ['required', 'integer', 'min:1'],
 
             'sections.*.content' => ['required', 'array'],

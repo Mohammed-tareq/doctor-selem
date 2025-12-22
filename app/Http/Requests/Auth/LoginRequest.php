@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Http\Requests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest {
@@ -14,15 +13,11 @@ class LoginRequest extends FormRequest {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email', 'max:30'],
+            'email' => ['required', 'string', 'email', 'max:30','regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/'],
             'password' => ['required', 'string', 'min:6', 'max:30'],
         ];
     }

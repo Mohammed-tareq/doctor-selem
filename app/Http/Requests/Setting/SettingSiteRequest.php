@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Setting;
 
-use App\Http\Requests\BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class SettingSiteRequest extends BaseRequest
+class SettingSiteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,11 +14,7 @@ class SettingSiteRequest extends BaseRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+
     public function rules(): array
     {
         return [
