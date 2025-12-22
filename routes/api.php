@@ -21,41 +21,42 @@ use App\Http\Controllers\Api\FrontEnd\Subscribe\SubcribeController;
 use App\Http\Controllers\Api\FrontEnd\User\UserInfoController;
 use Illuminate\Support\Facades\Route;
 
-
+Route::middleware('throttle:limiter')->group(function () {
+    ;
 // =================================  User info ===========================//
-Route::get('/home-info', UserInfoController::class)->middleware('throttle:limiter');
+    Route::get('/home-info', UserInfoController::class);
 // =================================== end User info ===========================//
 // ================================== Artilces ===========================//
-Route::prefix('articles')->controller(ArticleController::class)->group(function () {
-    Route::get('/', 'getArticles');
-    Route::get('/{article_id}', 'getArticle');
-});
+    Route::prefix('articles')->controller(ArticleController::class)->group(function () {
+        Route::get('/', 'getArticles');
+        Route::get('/{article_id}', 'getArticle');
+    });
 // =================================== end Artilces ========================//
 // ================================== Books ===========================//
-Route::prefix('books')->controller(BookController::class)->group(function () {
-    Route::get('/', 'getBooks');
-    Route::get('/{book_id}', 'getBook');
-});
+    Route::prefix('books')->controller(BookController::class)->group(function () {
+        Route::get('/', 'getBooks');
+        Route::get('/{book_id}', 'getBook');
+    });
 // =================================== end books ========================//
 // ================================== Blogs ===========================///
-Route::prefix('blogs')->controller(BlogController::class)->group(function () {
-    Route::get('/', 'getBlogs');
-    Route::get('/{blog_id}', 'getBlog');
-});
+    Route::prefix('blogs')->controller(BlogController::class)->group(function () {
+        Route::get('/', 'getBlogs');
+        Route::get('/{blog_id}', 'getBlog');
+    });
 // =================================== end blogs ========================//
 // ================================== Audios ===========================//
-Route::prefix('audios')->controller(AudioController::class)->group(function () {
-    Route::get('/', 'getAudios');
-    Route::get('/{audio_id}', 'getAudio');
-});
+    Route::prefix('audios')->controller(AudioController::class)->group(function () {
+        Route::get('/', 'getAudios');
+        Route::get('/{audio_id}', 'getAudio');
+    });
 // =================================== end Audios ========================//
 //=============================== setting =================================//
-Route::get('/setting', SettingController::class);
+    Route::get('/setting', SettingController::class);
 //=============================== End setting =================================//
 // ================================ subscribe  ================================//
-Route::post('/subscribe', SubcribeController::class);
+    Route::post('/subscribe', SubcribeController::class);
 // ================================ end subscribe  ================================//
-
+});
 
 //==================================== start admin ==================================//
 
@@ -66,7 +67,7 @@ Route::post('/reset-password', ResetPasswordController::class);
 //===================================== end Auth ========================================//
 
 
-Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+Route::prefix('admin')->middleware(['auth:sanctum','throttle:limiter'])->group(function () {
 
     Route::prefix('user')->controller(AdminDataController::class)->group(function () {
         Route::get('/', 'index');
