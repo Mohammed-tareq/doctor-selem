@@ -16,11 +16,13 @@ return new class extends Migration
             $table->string('site_name');
             $table->string('site_email');
             $table->string('site_phone');
+            $table->string('logo')->nullable();
+            $table->string('favicon')->nullable();
             $table->string('facebook')->nullable();
             $table->string('twitter')->nullable();
-            $table->string('linkin')->nullable();
+            $table->string('linkedin')->nullable();
             $table->string('instagram')->nullable();
-            $table->string('footer')->nullable();
+            $table->string('footer');
         });
     }
 

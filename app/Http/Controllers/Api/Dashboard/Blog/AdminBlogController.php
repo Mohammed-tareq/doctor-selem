@@ -82,7 +82,6 @@ class AdminBlogController extends Controller
                 'category_id' => $data['category_id'] ?? $blog->category_id,
                 'content' => $data['content'] ?? $blog->content,
                 'num_view' => $blog->num_view,
-                'type' => $data['type'] ?? $blog->type,
                 'date' => $data['date'] ?? $blog->date,
                 'publisher' => $data['publisher'] ?? $blog->publisher,
             ]);
@@ -94,7 +93,7 @@ class AdminBlogController extends Controller
             return apiResponse(200, 'blog updated successfully', BlogResource::make($blog));
         } catch (\Exception $e) {
             DB::rollBack();
-            return apiResponse(500, 'An error occurred while updating the blog');
+            return apiResponse(500, $e->getMessage());
         }
     }
 

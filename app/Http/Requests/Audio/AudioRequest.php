@@ -21,12 +21,9 @@ class AudioRequest extends BaseRequest
 
         return [
             'title' => $isStore
-                ? 'required|string|max:255'
-                : 'sometimes|string|max:255',
+                ? 'required|string|max:255|unique:audios,title'
+                : 'sometimes|string|max:255|unique:audios,title,' . $this->route('id'),
 
-            'category_id' => $isStore
-                ? 'required|exists:categories,id'
-                : 'sometimes|exists:categories,id',
 
             'details' => $isStore
                 ? 'required|string'

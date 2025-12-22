@@ -26,7 +26,7 @@ class ProjectRequest extends BaseRequest
     private function storeRules()
     {
         return [
-            'title' => 'required|string|min:3|max:200',
+            'title' => 'required|string|min:3|max:200|unique:projects,title',
             'image_cover' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'category_id' => 'required|exists:categories,id',
         ];
@@ -36,7 +36,7 @@ class ProjectRequest extends BaseRequest
     private function updateRules()
     {
         return [
-            'title' => 'sometimes|string|min:3|max:255',
+            'title' => 'sometimes|string|min:3|max:255|unique:projects,title,' . $this->route('id'),
             'image_cover' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'category_id' => 'sometimes|exists:categories,id',
         ];

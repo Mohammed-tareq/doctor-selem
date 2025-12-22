@@ -27,7 +27,7 @@ class BookRequest extends BaseRequest
     protected function storeRules(): array
     {
         return [
-            'title' => 'required|string|min:3|max:255',
+            'title' => 'required|string|min:3|max:255|unique:Books,title',
             'date' => 'required|date_format:Y',
             'publishing_house' => 'required|string|max:100',
             'lang' => 'required|string|max:40',

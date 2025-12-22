@@ -17,11 +17,13 @@ class UserResource extends JsonResource
         return [
             'user_name' => $this->name,
             'user_full_name' => $this->full_name,
-            'user_cv' => $this->cv,
+            'user_cv' => asset($this->cv),
             'user_personal' => $this->personal_aspect,
             'user_educational' => $this->educational_aspect,
-            'user_image_cover' => $this->image_cover,
-            'user_images' => $this->images,
+            'user_image_cover' => asset($this->image_cover),
+            'user_images' => collect($this->images)->map(function ($image) {
+                return asset($image);
+            })->toArray(),
 
         ];
     }

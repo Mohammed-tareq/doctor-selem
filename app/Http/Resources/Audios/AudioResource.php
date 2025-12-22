@@ -33,7 +33,6 @@ class AudioResource extends JsonResource
                 'project_title' => $this->project->title,
 
             ];
-            $data['audio_type'] = $this->type;
         }
         return $data;
     }

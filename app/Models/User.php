@@ -19,6 +19,7 @@ class User extends Authenticatable
         'email',
         'password',
         'bio',
+        'cv',
         'personal_aspect',
         'educational_aspect',
         'image_cover',
@@ -38,7 +39,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'images' => 'json',
+            'images' => 'array',
         ];
     }
 

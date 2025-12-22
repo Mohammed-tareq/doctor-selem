@@ -17,7 +17,9 @@ class Setting extends Model
         'site_phone',
         'facebook',
         'twitter',
-        'linkin',
+        'linkedin',
+        'logo',
+        'favicon',
         'instagram',
         'footer',
     ];

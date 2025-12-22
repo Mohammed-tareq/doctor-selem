@@ -30,12 +30,12 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if (!$category) return apiResponse(404, 'category not found');
         $data = request()->validate([
-            'title' => 'required|string|max:50|min:3|unique:categories,title,'.$category->id,
+            'title' => 'required|string|max:50|min:3|unique:categories,title,' . $id,
         ]);
         $category->update($data);
         return apiResponse(200, 'category updated successfully', $category);
     }
-    public function destroy($id)
+    public function delete($id)
     {
         $category = Category::find($id);
         if (!$category) return apiResponse(404, 'category not found');

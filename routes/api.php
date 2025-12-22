@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Dashboard\Book\BookAdminController;
 use App\Http\Controllers\Api\Dashboard\Category\CategoryController;
 use App\Http\Controllers\Api\Dashboard\Home\HomeAdminController;
 use App\Http\Controllers\Api\Dashboard\Project\ProjectAudioController;
+use App\Http\Controllers\Api\Dashboard\Setting\AdminSettingController;
 use App\Http\Controllers\Api\Dashboard\User\AdminDataController;
 use App\Http\Controllers\Api\FrontEnd\Article\ArticleController;
 use App\Http\Controllers\Api\FrontEnd\Audio\AudioController;
@@ -145,7 +146,7 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     });
     // =================================== end Audio ======================//
 
-
+    Route::put('/update/site-setting', [AdminSettingController::class, 'updateSetting']);
 });
 
 //==================================== end admin ==================================//

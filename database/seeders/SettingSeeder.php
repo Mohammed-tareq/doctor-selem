@@ -16,9 +16,11 @@ class SettingSeeder extends Seeder
             'site_name' => 'Doctor Selem',
             'site_email' => 'info@doctorselem.com',
             'site_phone' => '+201234567890',
+            'logo' => 'logo.png',
+            'favicon' => 'favicon.png',
             'facebook' => 'https://facebook.com/doctorselem',
             'twitter' => 'https://twitter.com/doctorselem',
-            'linkin' => 'https://linkedin.com/in/doctorselem',
+            'linkedin' => 'https://linkedin.com/in/doctorselem',
             'instagram' => 'https://instagram.com/doctorselem',
             'footer' => '© 2024 Doctor Selem. All rights reserved.',
         ]);

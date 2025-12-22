@@ -31,15 +31,19 @@ class ImageManagement
     public static function storeBlogImage($request, $blog)
     {
         if ($blog && ($request->hasFile('image_cover') || $request->has('image_content'))):
-            $coverPath = self::generateImageName($request->image_cover, 'Blogs');
-            $contentPath = self::generateImageName($request->image_content, 'Blogs');
+            if ($request->hasFile('image_cover')) {
+                $coverPath = self::generateImageName($request->image_cover, 'Blogs');
+                self::deleteImage($blog->image_cover);
+            }
+            if ($request->hasFile('image_content')) {
+                $contentPath = self::generateImageName($request->image_content, 'Blogs');
+                self::deleteImage($blog->image_content);
+            }
 
             $blog->update([
                 'image_cover' => $coverPath,
                 'image_content' => $contentPath,
             ]);
-            self::deleteImage($blog->image_cover);;
-            self::deleteImage($blog->image_content);
         endif;
     }
 
@@ -50,12 +54,12 @@ class ImageManagement
             foreach ($request->images as $image):
                 $path[] = self::generateImageName($image, 'books');
             endforeach;
-            $book->update(['images' => $path]);
             if ($book->images):
                 foreach ($book->images as $oldimages) {
                     self::deleteImage($oldimages);
                 }
             endif;
+            $book->update(['images' => $path]);
         endif;
         return;
     }
@@ -74,42 +78,57 @@ class ImageManagement
 
     public static function StoreUserImage($request, $user)
     {
-        if ($user && $request->hasFile('image_cover')):
-            $coverPath = self::generateImageName($request->image_cover, 'Users');
-            if (!$coverPath) return;
+        if ($user && $request->hasFile('image_cover')) {
             self::deleteImage($user->image_cover);
+            $coverPath = self::generateImageName($request->image_cover, 'Users');
+            $user->update(['image_cover' => $coverPath]);
+        }
 
-            $user->update([
-                'image_cover' => $coverPath,
-            ]);
-        endif;
         $path = [];
-            if ($user && $request->hasFile('images')):
-                foreach ($request->images as $index => $image) {
-                    {
-                        $path[] = self::generateImageName($image, 'Users');
-                        if (!$path[$index]) return;
-                        self::deleteImage($image);
-                    }
+        if ($user && $request->hasFile('images')) {
+            if ($user->images && is_array($user->images)) {
+                foreach ($user->images as $oldImage) {
+                    self::deleteImage($oldImage);
                 }
-                $user->update(['images' => $path]);
-            endif;
-        if ($user && $request->hasFile('cv')):
-            $cvPath = self::generateImageName($request->cv, 'Users/cv');
-            if (!$cvPath) return;
-            self::deleteImage($user->cv);
-            $user->update(['cv' => $cvPath]);
+            }
+            foreach ($request->images as $index => $image) {
+                $path[] = self::generateImageName($image, 'Users');
+            }
+            $user->update(['images' => $path]);
+
+            if ($user && $request->hasFile('cv')) {
+                self::deleteImage($user->cv);
+                $cvPath = self::generateImageName($request->cv, 'Users/cv');
+                $user->update(['cv' => $cvPath]);
+            }
+        }
+    }
+
+    public static function StoreSettingImage($request, $setting)
+    {
+        if ($setting && $request->hasFile('logo')):
+            self::deleteImage($setting->logo);
+            $logoPath = self::generateImageName($request->logo, 'settings');
+            $setting->update(['logo' => $logoPath]);
+        endif;
+        if ($setting && $request->hasFile('favicon')):
+            self::deleteImage($setting->favicon);
+
+            $iconPath = self::generateImageName($request->favicon, 'settings');
+            $setting->update(['favicon' => $iconPath]);
         endif;
     }
 
-    public static function deleteImage($image)
+    public
+    static function deleteImage($image)
     {
         if (File::exists(public_path($image))):
             File::delete(public_path($image));
         endif;
     }
 
-    protected static function generateImageName($file, $path)
+    protected
+    static function generateImageName($file, $path)
     {
         $fileName = Str::uuid() . time() . '.' . $file->getClientOriginalExtension();
         return $file->storeAs('uploads/' . $path, $fileName, ['disk' => 'store']);

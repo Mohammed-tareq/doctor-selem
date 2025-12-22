@@ -24,13 +24,15 @@ class AdminAudioController extends Controller
             DB::beginTransaction();
             $audio = $project->audios()->create([
                 'title' => $data['title'],
-                'category_id' => $data['category_id'],
                 'details' => $data['details'],
             ]);
             if (!$audio) return apiResponse(500, 'Internal server error');
 
             if ($request->hasFile('content')) {
-                $audio->content = ImageManagement::uploadImage($request, 'audio');
+                if ($audio->content) {
+                    ImageManagement::deleteImage($audio->content);
+                }
+                $audio->content = ImageManagement::uploadImage($request->file('content'), 'audio');
                 $getID3 = new \getID3();
                 $fileInfo = $getID3->analyze($request->file('content')->getPathname());
                 $duration = isset($fileInfo['playtime_seconds']) ? $fileInfo['playtime_seconds'] : null;
@@ -39,10 +41,11 @@ class AdminAudioController extends Controller
                 $audio->save();
             }
             DB::commit();
+            $audio->load('project.category');
             return apiResponse(201, 'audio created successfully', AudioResource::make($audio));
         } catch (\Exception $e) {
             DB::rollBack();
-            return apiResponse(500, 'Internal server error');
+            return apiResponse(500, $e->getMessage());
         }
     }
 
@@ -58,7 +61,7 @@ class AdminAudioController extends Controller
 
             $audio->update([
                 'title' => $data['title'] ?? $audio->title,
-                'category_id' => $data['category_id'] ?? $audio->category_id,
+                'project_id' => $data['project_id'] ?? $audio->project_id,
                 'details' => $data['details'] ?? $audio->details,
             ]);
 
@@ -67,7 +70,7 @@ class AdminAudioController extends Controller
                     ImageManagement::deleteImage($audio->content);
                 }
 
-                $audio->content = ImageManagement::uploadImage($request, 'audio');
+                $audio->content = ImageManagement::uploadImage($request->file('content'), 'audio');
                 $getID3 = new \getID3();
                 $fileInfo = $getID3->analyze($request->file('content')->getPathname());
                 $duration = isset($fileInfo['playtime_seconds']) ? $fileInfo['playtime_seconds'] : null;
@@ -76,6 +79,8 @@ class AdminAudioController extends Controller
             }
 
             DB::commit();
+            $audio->load('project.category');
+
 
             return apiResponse(200, 'audio updated successfully', AudioResource::make($audio));
         } catch (\Exception $e) {

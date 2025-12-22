@@ -36,7 +36,7 @@ class SettingFactory extends Factory
             'site_phone' => '+966' . fake()->numerify('########'),
             'facebook' => 'https://facebook.com/' . fake()->userName(),
             'twitter' => 'https://twitter.com/' . fake()->userName(),
-            'linkin' => 'https://linkedin.com/in/' . fake()->userName(),
+            'linkedin' => 'https://linkedin.com/in/' . fake()->userName(),
             'instagram' => 'https://instagram.com/' . fake()->userName(),
             'footer' => $arabicFooter,
         ];
