@@ -3,119 +3,67 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Mews\Purifier\Facades\Purifier;
 
 abstract class BaseRequest extends FormRequest
 {
     /**
-     * تنضيف تلقائي لكل الـ inputs قبل الـ validation
+     * تنضيف تلقائي آمن للحقول النصية فقط قبل التحقق
      */
     protected function prepareForValidation(): void
     {
-        $cleanedData = [];
-
-        foreach ($this->all() as $key => $value) {
-            $cleanedData[$key] = $this->deepClean($value);
+        // لو الـ Request فيه ملفات (صور)، متلمسش حاجة خالص عشان متخربش
+        if ($this->hasAnyFiles()) {
+            return;
         }
 
-        $this->merge($cleanedData);
+        $input = $this->all();
+        $cleaned = [];
+
+        foreach ($input as $key => $value) {
+            // لو القيمة array (زي checkboxes)، نضف كل عنصر فيها
+            if (is_array($value)) {
+                $cleaned[$key] = array_map([$this, 'cleanValue'], $value);
+            }
+            // لو string، نضفه بـ HTMLPurifier (أأمن حاجة في الدنيا)
+            elseif (is_string($value)) {
+                $cleaned[$key] = $this->cleanValue($value);
+            }
+            // لو رقم أو boolean أو null، سيبه زي ما هو
+            else {
+                $cleaned[$key] = $value;
+            }
+        }
+
+        // استبدل البيانات القديمة بالمنضفة
+        $this->replace($cleaned);
     }
 
     /**
-     * تنضيف عميق للـ data (يشتغل على arrays و strings)
+     * دالة صغيرة تنضف النص الواحد
      */
-    private function deepClean($value)
+    private function cleanValue($value)
     {
-        // لو array، نضّف كل عنصر فيه
-        if (is_array($value)) {
-            return array_map(fn($item) => $this->deepClean($item), $value);
-        }
-
-        // لو مش string، سيبه زي ما هو
-        if (!is_string($value)) {
+        // لو فاضي، رجعه فاضي
+        if ($value === '' || $value === null) {
             return $value;
         }
 
-        return $this->sanitizeString($value);
+        // استخدم HTMLPurifier عشان ينضف النص ويحمي من XSS
+        return Purifier::clean($value);
     }
 
     /**
-     * تنضيف النصوص من SQL Injection و XSS
+     * تحقق لو فيه أي ملفات في الـ Request
      */
-    private function sanitizeString(string $input): string
+    private function hasAnyFiles(): bool
     {
-        if (empty($input)) {
-            return $input;
-        }
-
-        // 1. منع SQL Injection Patterns
-        $sqlPatterns = [
-            // SQL Commands مع أقواس
-            '/\b(ALTER|DROP|DELETE|INSERT|UPDATE|TRUNCATE|EXEC|EXECUTE|UNION|SELECT|CREATE|REPLACE|RENAME|SHOW|DESCRIBE)\b\s*\(/i',
-
-            // SQL Comments
-            '/--[^\r\n]*/i',           // Single line comments
-            '/#[^\r\n]*/i',            // MySQL comments
-            '/\/\*[\s\S]*?\*\//i',     // Multi-line comments
-
-            // Union-based injection
-            '/\bUNION\b[\s\S]*?\bSELECT\b/i',
-
-            // Stacked queries
-            '/;\s*(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER)/i',
-
-            // Hex encoding attempts
-            '/0x[0-9A-F]+/i',
-
-            // SQL functions الخطيرة
-            '/\b(SLEEP|BENCHMARK|WAITFOR|DELAY|LOAD_FILE|INTO\s+OUTFILE|INTO\s+DUMPFILE)\b/i',
-
-            // Character encoding attacks
-            '/\b(CHAR|ASCII|ORD|HEX|UNHEX|CONCAT_WS)\b\s*\(/i',
-        ];
-
-        $cleaned = $input;
-
-        foreach ($sqlPatterns as $pattern) {
-            $cleaned = preg_replace($pattern, '', $cleaned);
-        }
-
-        // 2. منع XSS Attacks
-        $xssPatterns = [
-            '/<script\b[^>]*>(.*?)<\/script>/is',
-            '/<iframe\b[^>]*>(.*?)<\/iframe>/is',
-            '/on\w+\s*=\s*["\'].*?["\']/i',        // onclick, onload, etc.
-            '/javascript:/i',
-            '/vbscript:/i',
-            '/<embed\b[^>]*>/i',
-            '/<object\b[^>]*>/i',
-        ];
-
-        foreach ($xssPatterns as $pattern) {
-            $cleaned = preg_replace($pattern, '', $cleaned);
-        }
-
-        // 3. نضّف HTML tags (اختياري - علق السطر ده لو عايز تسمح بـ HTML)
-        $cleaned = strip_tags($cleaned);
-
-        // 4. نضّف whitespace زيادة
-        $cleaned = trim($cleaned);
-
-        return $cleaned;
+        return count($this->files->all()) > 0;
     }
 
-    /**
-     * Override ده لو عايز تعطل التنضيف في request معين
-     */
-    protected function skipSanitization(): bool
+    // باقي الدوال زي authorize لو عايز
+    public function authorize(): bool
     {
-        return false;
-    }
-
-    /**
-     * لو عايز تستثني fields معينة من التنضيف
-     */
-    protected function fieldsToSkip(): array
-    {
-        return []; // مثال: ['raw_html_content', 'password']
+        return true; // غيرها لو عايز تحكم في الصلاحيات
     }
 }

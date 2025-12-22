@@ -7,19 +7,30 @@ use Illuminate\Validation\Rule;
 
 class ArticleRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * تحضير البيانات قبل التحقق (تحويل order إلى integer)
      */
+    protected function prepareForValidation(): void
+    {
+        $data = $this->all();
+
+        // تحويل order في كل قسم إلى رقم صحيح
+        if (isset($data['sections']) && is_array($data['sections'])) {
+            foreach ($data['sections'] as $index => $section) {
+                if (isset($section['order'])) {
+                    $data['sections'][$index]['order'] = (int) $section['order'];
+                }
+            }
+        }
+
+        $this->replace($data);
+    }
+
     public function rules(): array
     {
         $rules = [
@@ -42,39 +53,32 @@ class ArticleRequest extends BaseRequest
             'sections.*.title' => ['required', 'string', 'max:200', 'min:3'],
             'sections.*.order' => ['required', 'integer', 'min:1'],
 
-            // content array
             'sections.*.content' => ['required', 'array'],
             'sections.*.content.*.type' => ['required', 'string', 'in:text,image,video,link'],
             'sections.*.content.*.content' => [
                 'required',
                 function ($attribute, $value, $fail) {
-                    if (str_contains($attribute, 'text') && !is_string($value)) {
-                        $fail('النص داخل المحتوى يجب أن يكون نص صحيح.');
+                    $parts = explode('.', $attribute);
+                    $contentIndex = $parts[count($parts) - 2];
+                    $sectionIndex = $parts[1];
+                    $type = $this->input("sections.{$sectionIndex}.content.{$contentIndex}.type");
+
+                    if ($type === 'text' && !is_string($value)) {
+                        $fail('المحتوى النصي يجب أن يكون نصًا.');
                     }
 
-                    if (str_contains($attribute, 'image')) {
-                        $validator = \Validator::make(
-                            [$attribute => $value],
-                            [$attribute => 'image|mimes:jpg,jpeg,png,webp|max:2048'] // 2MB
-                        );
-                        if ($validator->fails()) {
-                            $fail($validator->errors()->first($attribute));
-                        }
+                    if ($type === 'image' && !is_string($value)) {
+                        $fail('اسم ملف الصورة يجب أن يكون نصًا (مثل new_intro.png).');
                     }
 
-                    if (str_contains($attribute, 'video')) {
-                        $validator = \Validator::make(
-                            [$attribute => $value],
-                            [$attribute => 'file|mimetypes:video/mp4,video/avi,video/mpeg|max:10240'] // 10MB
-                        );
-                        if ($validator->fails()) {
-                            $fail($validator->errors()->first($attribute));
-                        }
+                    if ($type === 'video' && !is_string($value)) {
+                        $fail('اسم ملف الفيديو يجب أن يكون نصًا (مثل video.mp4).');
                     }
-                    if (str_contains($attribute, 'link') && !filter_var($value, FILTER_VALIDATE_URL)) {
-                        $fail('الرابط داخل المحتوى يجب أن يكون رابط صالح.');
+
+                    if ($type === 'link' && !filter_var($value, FILTER_VALIDATE_URL)) {
+                        $fail('الرابط غير صالح، يجب أن يكون رابط كامل مثل https://example.com');
                     }
-                }
+                },
             ],
         ];
 
@@ -90,11 +94,9 @@ class ArticleRequest extends BaseRequest
         }
 
         return $rules;
-
     }
 
-
-    public function messages()
+    public function messages(): array
     {
         return [
             'title.required' => 'العنوان مطلوب',
@@ -121,24 +123,23 @@ class ArticleRequest extends BaseRequest
             'post_by.min' => 'اسم الناشر يجب أن يكون أطول من 5 أحرف',
             'post_by.max' => 'اسم الناشر يجب ألا يزيد عن 100 حرف',
 
-            'sections.array' => 'الأقسام يجب أن تكون في شكل مصفوفة',
+            'sections.required' => 'الأقسام مطلوبة',
+            'sections.array' => 'الأقسام يجب أن تكون مصفوفة',
 
             'sections.*.title.required' => 'عنوان القسم مطلوب',
-            'sections.*.title.min' => 'عنوان القسم يجب أن يكون أطول من 5 أحرف',
-            'sections.*.title.max' => 'عنوان القسم يجب ألا يزيد عن 100 حرف',
+            'sections.*.title.min' => 'عنوان القسم يجب أن يكون على الأقل 3 أحرف',
+            'sections.*.title.max' => 'عنوان القسم يجب ألا يزيد عن 200 حرف',
+
+            'sections.*.order.required' => 'ترتيب القسم مطلوب',
+            'sections.*.order.integer' => 'ترتيب القسم يجب أن يكون رقم صحيح',
 
             'sections.*.content.required' => 'محتوى القسم مطلوب',
-            'sections.*.content.min' => 'محتوى القسم يجب أن يكون أطول من 5 أحرف',
-            'sections.*.content.max' => 'محتوى القسم يجب ألا يزيد عن 16000 حرف',
+            'sections.*.content.array' => 'محتوى القسم يجب أن يكون مصفوفة',
 
-            'sections.*.image.image' => 'الملف المرفوع يجب أن يكون صورة',
-            'sections.*.image.mimes' => 'الصورة يجب أن تكون بصيغ jpg أو jpeg أو png أو webp',
-            'sections.*.image.max' => 'حجم الصورة يجب ألا يتجاوز 2 ميجا',
+            'sections.*.content.*.type.required' => 'نوع المحتوى مطلوب',
+            'sections.*.content.*.type.in' => 'نوع المحتوى يجب أن يكون text أو image أو video أو link',
 
-            'sections.*.video.file' => 'الملف المرفوع يجب أن يكون فيديو',
-            'sections.*.video.mimetypes' => 'الفيديو يجب أن يكون بصيغة mp4 أو avi أو mpeg',
-            'sections.*.video.max' => 'حجم الفيديو يجب ألا يتجاوز 10 ميجا',
+            'sections.*.content.*.content.required' => 'محتوى العنصر مطلوب',
         ];
     }
-
 }

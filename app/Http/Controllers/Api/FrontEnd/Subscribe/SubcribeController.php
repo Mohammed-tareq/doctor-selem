@@ -15,7 +15,7 @@ class SubcribeController extends Controller
     {
 
         $request->validate([
-            'email' => 'required|email:rfc,dns',
+                        'email' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
         ], [
             'email.required' => 'We need your email address!',
             'email.email' => 'Please enter a valid email format.',
