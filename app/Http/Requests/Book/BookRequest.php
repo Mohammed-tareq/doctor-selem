@@ -28,13 +28,13 @@ class BookRequest extends FormRequest
     {
         return [
             "title" => "required|string|min:3|max:255|unique:Books,title|regex:{$this->textRegex}",
-            "date" => "required|date|date_format:Y",
+            "date" => "required|integer|date_format:Y",
             "publishing_house" => "required|string|max:100|regex:{$this->textRegex}",
             "lang" => "required|string|max:40|regex:{$this->textRegex}",
             "pages" => "required|integer|min:1",
             "edition_number" => "required|string|min:5|regex:{$this->textRegex}",
             "goals" => "required|string|min:10|max:2000|regex:{$this->textRegex}",
-            "summary" => "required|string",
+            "summary" => "required|string|min:10|max:2000|regex:{$this->textRegex}",
             "category_id" => "required|exists:categories,id",
 
             "images" => "required|array|min:1",

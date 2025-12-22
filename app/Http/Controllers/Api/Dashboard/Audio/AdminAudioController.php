@@ -15,8 +15,8 @@ class AdminAudioController extends Controller
 
     public function store(AudioRequest $request)
     {
-        if (!$request->validated()) return apiResponse(422, 'validation error');
         $data = $request->validated();
+        if (empty($data)) return apiResponse(422, 'validation error');
         try {
             $project = Project::find($request->project_id ?? null);
             if (!$project) return apiResponse(404, 'project not found');
@@ -51,8 +51,8 @@ class AdminAudioController extends Controller
 
     public function update(AudioRequest $request, $id)
     {
-       if (!$request->validated()) return apiResponse(422, 'validation error');
-            $data = $request->validated();
+        $data = $request->validated();
+        if (empty($data)) return apiResponse(422, 'validation error');
         try {
             $audio = Audio::find($id);
             if (!$audio) return apiResponse(404, 'audio not found');

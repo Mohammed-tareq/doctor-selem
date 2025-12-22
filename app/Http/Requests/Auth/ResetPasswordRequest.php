@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Http\Requests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetPasswordRequest extends BaseRequest
+class ResetPasswordRequest extends FormRequest
 {
 
     public function authorize(): bool

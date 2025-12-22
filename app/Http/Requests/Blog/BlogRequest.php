@@ -66,7 +66,7 @@ class BlogRequest extends FormRequest
             "content" => "sometimes|string|min:20|not_regex:/<[^>]*>/",
             "image_cover" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "image_content" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "date" => "sometimes|date|date_format:Y",
+            "date" => "sometimes|integer|date_format:Y",
             "publisher" => "sometimes|string|max:255|regex:{$this->textRegex}",
             "category_id" => "sometimes|exists:categories,id",
         ];

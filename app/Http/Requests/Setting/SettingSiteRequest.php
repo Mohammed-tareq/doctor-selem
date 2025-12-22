@@ -18,16 +18,16 @@ class SettingSiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'site_name' => 'sometimes|string|max:30',
-            'site_email' => 'sometimes|email|max:30',
-            'site_phone' => 'sometimes|string|max:20',
+            'site_name' => 'sometimes|string|max:30|not_regex:/<[^>]*>/',
+            'site_email' => 'sometimes|email|max:30|not_regex:/<[^>]*>/',
+            'site_phone' => 'sometimes|string|max:20|not_regex:/<[^>]*>/',
             'logo' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'favicon' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'facebook' => 'sometimes|string|url',
-            'twitter' => 'sometimes|string|url',
-            'instagram' => 'sometimes|string|url',
-            'linkedin' => 'sometimes|string|url',
-            'footer' => 'sometimes|string|max:200',
+            'facebook' => 'sometimes|string|url|not_regex:/<[^>]*>/',
+            'twitter' => 'sometimes|string|url|not_regex:/<[^>]*>/',
+            'instagram' => 'sometimes|string|url|not_regex:/<[^>]*>/',
+            'linkedin' => 'sometimes|string|url|not_regex:/<[^>]*>/',
+            'footer' => 'sometimes|string|max:200|not_regex:/<[^>]*>/',
         ];
     }
 }

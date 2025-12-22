@@ -26,8 +26,8 @@ class ProjectAudioController extends Controller
 
     public function store(ProjectRequest $request)
     {
-        if (!$request->validated()) return apiResponse(422, 'validation error');
         $data = $request->validated();
+        if (empty($data)) return apiResponse(422, 'validation error');
 
         $data['speaker'] = $request->speaker ?? auth()->user()->name;
         $project = Project::create([
@@ -44,8 +44,8 @@ class ProjectAudioController extends Controller
 
     public function update(projectRequest $request, $id)
     {
-        if (!$request->validated()) return apiResponse(422, 'validation error');
         $data = $request->validated();
+        if(empty($data)) return apiResponse(422, 'validation error');
         try {
             DB::beginTransaction();
             $project = Project::find($id);

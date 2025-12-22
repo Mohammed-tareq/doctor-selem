@@ -35,8 +35,8 @@ class ArticaleController extends Controller
 
     public function store(ArticleRequest $request)
     {
-        if(!$request->validated()) return apiResponse(422, 'validation error');
         $data = $request->validated();
+        if (empty($data)) return apiResponse(422, 'validation error');
         try {
             DB::beginTransaction();
 
@@ -90,8 +90,8 @@ class ArticaleController extends Controller
 
     public function update(ArticleRequest $request, $id)
     {
-       if(!$request->validated()) return apiResponse(422, 'validation error');
         $data = $request->validated();
+        if (empty($data)) return apiResponse(422, 'validation error');
         try {
             DB::beginTransaction();
 
@@ -189,8 +189,7 @@ class ArticaleController extends Controller
                         'أ-ي'
                     );
                 }
-            }
-            else {
+            } else {
                 foreach ($content as $item) {
                     if (($item['type'] ?? null) === 'text') {
                         $section->word_count += str_word_count(

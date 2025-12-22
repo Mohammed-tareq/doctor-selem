@@ -12,8 +12,8 @@ class AdminSettingController extends Controller
 {
     public function updateSetting(SettingSiteRequest $request)
     {
-        if (!$request->validated()) return apiResponse(422, 'validation error');
         $data = $request->validated();
+        if(empty($data)) return apiResponse(422, 'validation error');
         try {
             $setting = Setting::first();
             if (!$setting) return apiResponse(404, 'setting not found');

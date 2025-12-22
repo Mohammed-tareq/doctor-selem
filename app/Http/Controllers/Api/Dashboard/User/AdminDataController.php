@@ -20,10 +20,9 @@ class AdminDataController extends Controller
 
     public function update(UserRequest $request)
     {
-        if (!$request->validated()) {
-            return apiResponse(400, 'validation error');
-        }
+
         $data = $request->validated();
+        if (empty($data)) return apiResponse(422, 'validation error');
         $user = auth()->user();
         if (!$user) return apiResponse(404, 'user not found');
         DB::beginTransaction();
@@ -40,7 +39,7 @@ class AdminDataController extends Controller
 
         $user = User::find($user->id);
 
-        if ($request->hasFile('image_cover')||$request->hasFile('images')||$request->hasFile('cv')) {
+        if ($request->hasFile('image_cover') || $request->hasFile('images') || $request->hasFile('cv')) {
             ImageManagement::storeUserImage($request, $user);
         }
         DB::commit();
