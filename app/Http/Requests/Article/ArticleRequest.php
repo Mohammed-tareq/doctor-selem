@@ -29,7 +29,7 @@ class ArticleRequest extends FormRequest
                 "regex:{$this->textRegex}",
             ],
             'type' => ['required', 'string', 'max:100', 'min:2',"regex:{$this->textRegex}"],
-            'year' => ['required', 'min:1900' . date('Y')],
+            'year' => ['required', 'date_format:Y', 'before_or_equal:' . now()->year],
             'category_id' => ['required', 'exists:categories,id'],
             'writer' => ['required', 'string', 'max:100', 'min:5',"regex:{$this->textRegex}"],
             'post_by' => ['required', 'string', 'max:100', 'min:5',"regex:{$this->textRegex}"],
@@ -96,7 +96,6 @@ class ArticleRequest extends FormRequest
 
             'year.required' => 'السنة مطلوبة',
             'year.integer' => 'السنة يجب أن تكون رقم صحيح',
-            'year.min' => 'السنة يجب أن تكون أكبر من 1900',
             'year.max' => 'السنة يجب ألا تتجاوز السنة الحالية',
 
             'category_id.required' => 'الفئة مطلوبة',

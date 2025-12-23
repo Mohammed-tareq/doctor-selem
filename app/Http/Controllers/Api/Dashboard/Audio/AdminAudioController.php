@@ -53,6 +53,7 @@ class AdminAudioController extends Controller
     {
         $data = $request->validated();
         if (empty($data)) return apiResponse(422, 'validation error');
+
         try {
             $audio = Audio::find($id);
             if (!$audio) return apiResponse(404, 'audio not found');
@@ -60,32 +61,36 @@ class AdminAudioController extends Controller
             DB::beginTransaction();
 
             $audio->update([
-                'title' => $data['title'] ?? $audio->title,
+                'title'      => $data['title'] ?? $audio->title,
                 'project_id' => $data['project_id'] ?? $audio->project_id,
-                'details' => $data['details'] ?? $audio->details,
+                'details'    => $data['details'] ?? $audio->details,
             ]);
 
             if ($request->hasFile('content')) {
+                $file = $request->file('content');
+
                 if ($audio->content) {
                     ImageManagement::deleteImage($audio->content);
                 }
 
-                $audio->content = ImageManagement::uploadImage($request->file('content'), 'audio');
-                $getID3 = new \getID3();
-                $fileInfo = $getID3->analyze($request->file('content')->getPathname());
-                $duration = isset($fileInfo['playtime_seconds']) ? $fileInfo['playtime_seconds'] : null;
-                $audio->duration = $duration;
+                $audio->content = ImageManagement::uploadImage($file, 'audio');
+
+                if ($file) {
+                    $getID3 = new \getID3();
+                    $fileInfo = $getID3->analyze($file->getPathname());
+                    $audio->duration = $fileInfo['playtime_seconds'] ?? null;
+                }
+
                 $audio->save();
             }
 
             DB::commit();
             $audio->load('project.category');
 
-
             return apiResponse(200, 'audio updated successfully', AudioResource::make($audio));
         } catch (\Exception $e) {
             DB::rollBack();
-            return apiResponse(500, 'Internal server error');
+            return apiResponse(500, $e->getMessage()); // الأفضل ترجع الرسالة الحقيقية للتصحيح
         }
     }
 

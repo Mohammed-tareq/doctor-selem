@@ -37,7 +37,7 @@ class AdminBlogController extends Controller
     public function store(BlogRequest $request)
     {
         $cleanData = $request->validated();
-        if (empty($data)) return apiResponse(422, 'validation error');
+        if (empty($cleanData )) return apiResponse(422, 'validation error');
 
         try {
             DB::beginTransaction();

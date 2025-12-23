@@ -19,7 +19,9 @@ class BookResource extends JsonResource
             'book_id' => $this->id,
             'book_name' => $this->title,
             'book_date' => $this->date->format('Y'),
-            'image' => $withCategory? $this->images : $this->images[0],
+            'image' => $withCategory? collect($this->images ?? [])
+                ->map(fn($item) => asset($item))
+                ->toArray() : $this->images[0],
             'publishing_house' => $this->publishing_house,
             $this->mergeWhen($withCategory, [
                 'book_lang' => $this->lang,

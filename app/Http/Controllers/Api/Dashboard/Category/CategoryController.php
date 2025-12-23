@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Dashboard\Category;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Category\CategoryResource;
 use App\Models\Category;
 
 class CategoryController extends Controller
@@ -10,7 +11,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::select('id', 'title')->get();
-        return apiResponse(200, 'success', $categories);
+        return apiResponse(200, 'success', CategoryResource::collection($categories));
     }
 
     public function store()
@@ -21,7 +22,7 @@ class CategoryController extends Controller
 
         $category = Category::create($data);
         if (!$category) return apiResponse(400, 'failed to create category');
-        return apiResponse(201, 'category created successfully', $category);
+        return apiResponse(201, 'category created successfully', CategoryResource::make($category));
     }
 
     public function update($id)

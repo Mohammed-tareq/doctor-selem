@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 class BlogRequest extends FormRequest
 {
     protected string $textRegex =
-        "/^[a-zA-Z0-9\s\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF},.!?؛،\-_()]+$/u";
+        "/^(?!.*<\s*script\b)[a-zA-Z0-9\s\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF},.!?؛،\-_()]+$/iu";
 
 
     public function authorize(): bool
@@ -64,8 +64,8 @@ class BlogRequest extends FormRequest
                 "regex:{$this->textRegex}",
             ],
             "content" => "sometimes|string|min:20|not_regex:/<\s*script\b/i",
-            "image_cover" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "image_content" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
+            "image_cover" => "required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
+            "image_content" => "required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "date" => "sometimes|date_format:Y",
             "publisher" => "sometimes|string|max:255|regex:{$this->textRegex}",
             "category_id" => "sometimes|exists:categories,id",
