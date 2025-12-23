@@ -28,7 +28,7 @@ class BookRequest extends FormRequest
     {
         return [
             "title" => "required|string|min:3|max:255|unique:Books,title|regex:{$this->textRegex}",
-            "date" => "required|integer|date_format:Y",
+            "date" => "required|date_format:Y",
             "publishing_house" => "required|string|max:100|regex:{$this->textRegex}",
             "lang" => "required|string|max:40|regex:{$this->textRegex}",
             "pages" => "required|integer|min:1",
@@ -56,7 +56,7 @@ class BookRequest extends FormRequest
 
             ],
 
-            "date" => "sometimes|date|date_format:Y",
+            "date" => "sometimes|date_format:Y",
             "publishing_house" => "sometimes|string|max:100|regex:{$this->textRegex}",
             "lang" => "sometimes|string|max:40|regex:{$this->textRegex}",
             "pages" => "sometimes|integer|min:1|regex:{$this->textRegex}",

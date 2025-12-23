@@ -29,7 +29,7 @@ class ArticleRequest extends FormRequest
                 "regex:{$this->textRegex}",
             ],
             'type' => ['required', 'string', 'max:100', 'min:2',"regex:{$this->textRegex}"],
-            'year' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
+            'year' => ['required', 'min:1900' . date('Y')],
             'category_id' => ['required', 'exists:categories,id'],
             'writer' => ['required', 'string', 'max:100', 'min:5',"regex:{$this->textRegex}"],
             'post_by' => ['required', 'string', 'max:100', 'min:5',"regex:{$this->textRegex}"],

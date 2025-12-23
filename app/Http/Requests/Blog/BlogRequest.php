@@ -46,7 +46,7 @@ class BlogRequest extends FormRequest
             "content" => "required|string|min:20|not_regex:/<\s*script\b/i",
             "image_cover" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "image_content" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "date" => "required|integer|date_format:Y",
+            "date" => "required|date_format:Y",
             "publisher" => "required|string|max:255|regex:{$this->textRegex}",
             "category_id" => "required|exists:categories,id",
         ];
@@ -66,7 +66,7 @@ class BlogRequest extends FormRequest
             "content" => "sometimes|string|min:20|not_regex:/<\s*script\b/i",
             "image_cover" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "image_content" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "date" => "sometimes|integer|date_format:Y",
+            "date" => "sometimes|date_format:Y",
             "publisher" => "sometimes|string|max:255|regex:{$this->textRegex}",
             "category_id" => "sometimes|exists:categories,id",
         ];
