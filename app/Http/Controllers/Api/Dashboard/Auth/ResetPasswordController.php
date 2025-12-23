@@ -26,6 +26,7 @@ class ResetPasswordController extends Controller
                 return apiResponse('404', 'Invalid OTP Please try again');
             }
             $user->update(['password' => $request->password]);
+            $user->tokens()->delete();
             return apiResponse('200', 'Password Changed Successfully');
     }
 }

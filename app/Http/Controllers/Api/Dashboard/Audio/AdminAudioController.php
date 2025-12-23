@@ -90,7 +90,7 @@ class AdminAudioController extends Controller
             return apiResponse(200, 'audio updated successfully', AudioResource::make($audio));
         } catch (\Exception $e) {
             DB::rollBack();
-            return apiResponse(500, $e->getMessage()); // الأفضل ترجع الرسالة الحقيقية للتصحيح
+            return apiResponse(500, 'Internal server error');
         }
     }
 
