@@ -28,7 +28,7 @@ class ProjectRequest extends FormRequest
         return [
             "title" => "required|string|min:3|max:200|unique:projects,title|regex:{$this->textRegex}",
             "image_cover" => "required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "category_id" => "required|exists:categories,id",
+            "category_id" => "required|integer|exists:categories,id",
         ];
     }
 
@@ -38,7 +38,7 @@ class ProjectRequest extends FormRequest
         return [
             'title' => "sometimes|string|min:3|max:255|regex:{$this->textRegex}|unique:projects,title," . $this->route('id'),
             "image_cover" => "sometimes|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "category_id" => "sometimes|exists:categories,id",
+            "category_id" => "sometimes|integer|exists:categories,id",
         ];
     }
 }

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->longText('content');
             $table->string('image_cover')->nullable();
             $table->string('image_content')->nullable();
-            $table->date('date');
             $table->string('publisher');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->integer('num_view')->default(0);

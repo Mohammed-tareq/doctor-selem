@@ -30,8 +30,8 @@ class AudioRequest extends FormRequest
                 : "sometimes|string|max:1000|regex:{$this->textRegex}",
 
             "project_id" => $isStore
-                ? "required|exists:projects,id"
-                : "sometimes|exists:projects,id",
+                ? "required|integer|exists:projects,id"
+                : "sometimes|integer|exists:projects,id",
 
             "content" => [
                 $isStore ? "required" : "sometimes",

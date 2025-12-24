@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard\Audio;
 
+use App\Events\NewAddEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Audio\AudioRequest;
 use App\Http\Resources\Audios\AudioResource;
@@ -42,6 +43,12 @@ class AdminAudioController extends Controller
             }
             DB::commit();
             $audio->load('project.category');
+
+            if ($audio) {
+                $eventData = $audio->toArray();
+                unset($eventData['project']);
+                // event(new NewAddEvent($eventData));
+            }
             return apiResponse(201, 'audio created successfully', AudioResource::make($audio));
         } catch (\Exception $e) {
             DB::rollBack();
@@ -61,9 +68,9 @@ class AdminAudioController extends Controller
             DB::beginTransaction();
 
             $audio->update([
-                'title'      => $data['title'] ?? $audio->title,
+                'title' => $data['title'] ?? $audio->title,
                 'project_id' => $data['project_id'] ?? $audio->project_id,
-                'details'    => $data['details'] ?? $audio->details,
+                'details' => $data['details'] ?? $audio->details,
             ]);
 
             if ($request->hasFile('content')) {

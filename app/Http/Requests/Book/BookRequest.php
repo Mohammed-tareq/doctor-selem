@@ -27,7 +27,7 @@ class BookRequest extends FormRequest
     protected function storeRules(): array
     {
         return [
-            "title" => "required|string|min:3|max:255|unique:Books,title|regex:{$this->textRegex}",
+            "title" => "required|string|min:3|max:255|unique:books,title|regex:{$this->textRegex}",
             "date" => "required|date_format:Y",
             "publishing_house" => "required|string|max:100|regex:{$this->textRegex}",
             "lang" => "required|string|max:40|regex:{$this->textRegex}",
@@ -35,7 +35,7 @@ class BookRequest extends FormRequest
             "edition_number" => "required|string|min:5|regex:{$this->textRegex}",
             "goals" => "required|string|min:10|max:2000|regex:{$this->textRegex}",
             "summary" => "required|string|min:10|max:2000|regex:{$this->textRegex}",
-            "category_id" => "required|exists:categories,id",
+            "category_id" => "required|integer|exists:categories,id",
 
             "images" => "required|array|min:1",
             "images.*" => "image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
@@ -63,7 +63,7 @@ class BookRequest extends FormRequest
             "edition_number" => "sometimes|string|min:5|regex:{$this->textRegex}",
             "goals" => "sometimes|string|max:2000|regex:{$this->textRegex}",
             "summary" => "sometimes|string|max:2000|regex:{$this->textRegex}",
-            "category_id" => "sometimes|exists:categories,id",
+            "category_id" => "sometimes|integer|exists:categories,id",
 
             "images" => "sometimes|array",
             "images.*" => "image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",

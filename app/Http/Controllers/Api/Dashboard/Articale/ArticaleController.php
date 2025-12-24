@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard\Articale;
 
+use App\Events\NewAddEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Article\ArticleRequest;
 use App\Http\Resources\Articles\ArticleCollection;
@@ -77,10 +78,14 @@ class ArticaleController extends Controller
 
             $article->sections()->createMany($sections);
             $article->load('sections');
-
             DB::commit();
             $article->total_word_count = $this->getArticle($article->id);
 
+            if ($article) {
+                $eventData = $article->toArray();
+                unset($eventData['category_id'], $eventData['created_at'], $eventData['updated_at'], $eventData['sections']);
+                // event(new NewAddEvent($eventData));
+            }
             return apiResponse(200, 'Article created successfully', ArticleResource::make($article));
         } catch (\Exception $e) {
             DB::rollBack();
@@ -133,6 +138,7 @@ class ArticaleController extends Controller
             $article->load('sections');
 
             DB::commit();
+
             return apiResponse(200, 'Article updated successfully', ArticleResource::make($article));
         } catch (\Exception $e) {
             DB::rollBack();

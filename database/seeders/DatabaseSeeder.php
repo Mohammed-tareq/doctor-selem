@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             BookSeeder::class,
             BusinessSeeder::class,
             SettingSeeder::class,
+            subscribeSeeder::class
         ]);
     }
 }

@@ -23,6 +23,7 @@ class LimterServiceProvider extends ServiceProvider
     public function boot(): void
     {
             $this->limiter();
+            $this->passwordLimiter();
     }
     protected  function limiter()
     {
@@ -31,5 +32,20 @@ class LimterServiceProvider extends ServiceProvider
                 return apiResponse(429, 'You are sending too many requests please try again later');
             });
         });
+    }
+
+    protected function passwordLimiter()
+    {
+        RateLimiter::for('limiter', function (Request $request) {
+            return Limit::perMinutes(15, 3)
+                ->by($request->ip())
+                ->response(function () {
+                    return apiResponse(
+                        429,
+                        'Too many login attempts. Please try again in 1 minutes'
+                    );
+                });
+        });
+
     }
 }

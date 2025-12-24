@@ -20,7 +20,7 @@ class AudioResource extends JsonResource
             'audio_id' => $this->id,
             'audio_title' => $this->title,
             'audio_details' => $this->details,
-            'audio_project' =>  asset($this->project->image_cover) ?? null,
+            'audio_project' =>  asset('/public/' . $this->project->image_cover) ?? null,
             'audio_date' => $this->created_at->format('d/M/Y'),
             'audio_time' => $this->created_at->format('g:i A'),
             'duration' => gmdate("i:s", $this->duration),

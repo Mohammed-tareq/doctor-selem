@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'user_educational' => $this->educational_aspect,
             'user_image_cover' => asset($this->image_cover),
             'user_images' => collect($this->images)->map(function ($image) {
-                return asset($image);
+                return asset('/public/'.$image);
             })->toArray(),
 
         ];

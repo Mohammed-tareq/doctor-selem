@@ -17,7 +17,7 @@ class CategoryController extends Controller
     public function store()
     {
         $data = request()->validate([
-            'title' => 'required|string|max:50|min:3|unique:categories,title',
+            'title' => 'required|string|max:50|min:3|regex:/^[a-zA-Z0-9\s\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF},.!?؛،\-_()]+$/u|unique:categories,title',
         ]);
 
         $category = Category::create($data);
@@ -28,10 +28,11 @@ class CategoryController extends Controller
     public function update($id)
     {
 
+
         $category = Category::find($id);
         if (!$category) return apiResponse(404, 'category not found');
         $data = request()->validate([
-            'title' => 'required|string|max:50|min:3|unique:categories,title,' . $id,
+            'title' => 'required|string|max:50|min:3|regex:/^[a-zA-Z0-9\s\x{0600}-\x{06FF}\x{0750}-\x{077F}\x{08A0}-\x{08FF}\x{FB50}-\x{FDFF}\x{FE70}-\x{FEFF},.!?؛،\-_()]+$/u|unique:categories,title,' . $id,
         ]);
         $category->update($data);
         return apiResponse(200, 'category updated successfully', $category);

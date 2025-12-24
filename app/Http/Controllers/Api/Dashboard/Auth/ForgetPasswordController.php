@@ -13,14 +13,13 @@ class ForgetPasswordController extends Controller
     public function __invoke(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|string|max:30|min:5|exists:users,email',
+            'email' => 'required|email|string|max:30|min:5',
         ]);
 
         $user = User::whereEmail($request->only('email'))->first();
-        if (!$user) {
-            return apiResponse(404, 'Invalid data  Please try again');
+        if ($user) {
+            $user->notify(new SendOtpNotification());
         }
-        $user->notify(new SendOtpNotification());
         return apiResponse(200, 'Check your email');
     }
 }

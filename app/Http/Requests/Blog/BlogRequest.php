@@ -46,9 +46,8 @@ class BlogRequest extends FormRequest
             "content" => "required|string|min:20|not_regex:/<\s*script\b/i",
             "image_cover" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "image_content" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "date" => "required|date_format:Y",
             "publisher" => "required|string|max:255|regex:{$this->textRegex}",
-            "category_id" => "required|exists:categories,id",
+            "category_id" => "required|integer|exists:categories,id",
         ];
     }
 
@@ -66,9 +65,8 @@ class BlogRequest extends FormRequest
             "content" => "sometimes|string|min:20|not_regex:/<\s*script\b/i",
             "image_cover" => "required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "image_content" => "required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "date" => "sometimes|date_format:Y",
             "publisher" => "sometimes|string|max:255|regex:{$this->textRegex}",
-            "category_id" => "sometimes|exists:categories,id",
+            "category_id" => "sometimes|integer|exists:categories,id",
         ];
     }
 

@@ -17,7 +17,7 @@ class ProjectResource extends JsonResource
         $data = [
             'project_id' => $this->id,
             'project_title' => $this->title,
-            'project_image_cover' => $this->image_cover,
+            'project_image_cover' => asset('/public/'.$this->image_cover),
             'project_audio' => AudioResource::collection($this->whenLoaded('audios')),
         ];
 

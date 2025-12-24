@@ -71,7 +71,6 @@ class BlogSeeder extends Seeder
                 'content' => $arabicContent,
                 'image_cover' => asset('files/book1.webp'),
                 'image_content' => asset('files/book2.webp'),
-                'date' => now(),
                 'publisher' => $user->id,
                 'num_view' => rand(0, 10000),
                 'category_id' => $categories->random()->id,

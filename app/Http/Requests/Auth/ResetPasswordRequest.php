@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class ResetPasswordRequest extends FormRequest
 {
@@ -18,32 +19,62 @@ class ResetPasswordRequest extends FormRequest
         return [
             'token' => 'required|string|min:5|max:6',
             'email' => 'required|email|string',
-            'password' => 'required|string|min:6|max:20|confirmed',
-            'password_confirmation' => 'required|string|min:6|max:20',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:20',
+                'confirmed',
+                'not_regex:/<[^>]*>/',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
+
+            'password_confirmation' => [
+                'required',
+                'string',
+                'min:8',
+                'max:20',
+                'not_regex:/<[^>]*>/',
+            ],
+
         ];
     }
+
     public function messages()
     {
         return [
             'token.required' => 'The verification code is required.',
-            'token.string'   => 'The verification code must be a string.',
-            'token.min'      => 'The verification code must be at least 5 characters.',
-            'token.max'      => 'The verification code may not be greater than 6 characters.',
+            'token.string' => 'The verification code must be a string.',
+            'token.min' => 'The verification code must be at least 5 characters.',
+            'token.max' => 'The verification code may not be greater than 6 characters.',
 
             'email.required' => 'The email address is required.',
-            'email.email'    => 'Please enter a valid email address.',
-            'email.string'   => 'The email address must be a string.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.string' => 'The email address must be a string.',
 
             'password.required'   => 'The password is required.',
             'password.string'     => 'The password must be a string.',
-            'password.min'        => 'The password must be at least 6 characters.',
+            'password.min'        => 'The password must be at least 8 characters.',
             'password.max'        => 'The password may not be greater than 20 characters.',
             'password.confirmed'  => 'The password confirmation does not match.',
 
-            'password_confirmation.required' => 'The password confirmation is required.',
-            'password_confirmation.string'   => 'The password confirmation must be a string.',
-            'password_confirmation.min'      => 'The password confirmation must be at least 6 characters.',
-            'password_confirmation.max'      => 'The password confirmation may not be greater than 20 characters.',
+            'password.not_regex'  => 'The password must not contain HTML or script tags.',
+            'password.letters'    => 'The password must contain at least one letter.',
+            'password.mixed_case' => 'The password must contain at least one uppercase and one lowercase letter.',
+            'password.numbers'    => 'The password must contain at least one number.',
+            'password.symbols'    => 'The password must contain at least one special character.',
+
+
+            'password_confirmation.required'  => 'The password confirmation is required.',
+            'password_confirmation.string'    => 'The password confirmation must be a string.',
+            'password_confirmation.min'       => 'The password confirmation must be at least 8 characters.',
+            'password_confirmation.max'       => 'The password confirmation may not be greater than 20 characters.',
+            'password_confirmation.not_regex' => 'The password confirmation must not contain HTML or script tags.',
+
         ];
     }
 }

@@ -20,8 +20,8 @@ class BookResource extends JsonResource
             'book_name' => $this->title,
             'book_date' => $this->date->format('Y'),
             'image' => $withCategory? collect($this->images ?? [])
-                ->map(fn($item) => asset($item))
-                ->toArray() : $this->images[0],
+                ->map(fn($item) => asset('/public/'.$item))
+                ->toArray() : asset('/public/' . $this->images[0]),
             'publishing_house' => $this->publishing_house,
             $this->mergeWhen($withCategory, [
                 'book_lang' => $this->lang,
@@ -30,6 +30,7 @@ class BookResource extends JsonResource
                 'book_classfiction' => $this->whenLoaded('category') ? $this->category->title : null,
                 'book_goals' => $this->goals,
                 'book_summary' => $this->summary,
+                'book_link' => $this->link,
             ])
 
         ];

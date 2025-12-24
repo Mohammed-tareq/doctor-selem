@@ -63,13 +63,18 @@ class BookAdminController extends Controller
                 ImageManagement::storeBook($request, $book);
             }
             DB::commit();
-            $book->load('category');
             event(new NewAddEvent($book));
+            $book->load('category');
+            if ($book) {
+                $eventData = $book->toArray();
+                unset($eventData['category']);
+                // event(new NewAddEvent($eventData));
+            }
             return apiResponse(201, 'book created successfully', BookResource::make($book));
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return apiResponse(500, 'Internal server error');
+            return apiResponse(500, 'Internal server error'.$e->getMessage());
         }
     }
 
@@ -103,6 +108,7 @@ class BookAdminController extends Controller
             }
             DB::commit();
             $book->load('category');
+
             return apiResponse(200, 'book updated successfully', BookResource::make($book));
 
         } catch (\Exception $e) {

@@ -30,7 +30,7 @@ class ArticleRequest extends FormRequest
             ],
             'type' => ['required', 'string', 'max:100', 'min:2',"regex:{$this->textRegex}"],
             'year' => ['required', 'date_format:Y', 'before_or_equal:' . now()->year],
-            'category_id' => ['required', 'exists:categories,id'],
+            'category_id' => ['required', 'integer','exists:categories,id'],
             'writer' => ['required', 'string', 'max:100', 'min:5',"regex:{$this->textRegex}"],
             'post_by' => ['required', 'string', 'max:100', 'min:5',"regex:{$this->textRegex}"],
             'references' => ['sometimes', 'array'],

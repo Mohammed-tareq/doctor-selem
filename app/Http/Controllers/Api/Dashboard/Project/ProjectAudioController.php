@@ -35,7 +35,7 @@ class ProjectAudioController extends Controller
             'category_id' => $data['category_id'],
             'speaker' => $data['speaker'],
         ]);
-        if (!$project) apiResponse(400, 'failed to create project');
+        if (!$project) return apiResponse(400, 'failed to create project');
         if ($request->hasFile('image_cover')) {
             ImageManagement::storeProjectImage($request, $project);
         }

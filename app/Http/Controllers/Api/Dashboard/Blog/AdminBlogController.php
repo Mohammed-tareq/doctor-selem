@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard\Blog;
 
+use App\Events\NewAddEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Blog\BlogRequest;
 use App\Http\Resources\Blogs\BlogCollection;
@@ -45,7 +46,6 @@ class AdminBlogController extends Controller
                 'title' => $cleanData['title'],
                 'category_id' => $cleanData['category_id'],
                 'content' => $cleanData['content'],
-                'date' => $cleanData['date'],
                 'publisher' => $cleanData['publisher'],
             ]);
             if (!$blog) {
@@ -58,6 +58,11 @@ class AdminBlogController extends Controller
 
             $blog->load('category');
             DB::commit();
+            if($blog) {
+                $eventData = $blog->toArray();
+                unset($eventData['category']);
+                // event(new NewAddEvent($eventData));
+            }
             return apiResponse(201, 'blog created successfully', BlogResource::make($blog));
         } catch (\Exception $e) {
             DB::rollBack();
@@ -82,7 +87,6 @@ class AdminBlogController extends Controller
                 'category_id' => $data['category_id'] ?? $blog->category_id,
                 'content' => $data['content'] ?? $blog->content,
                 'num_view' => $blog->num_view,
-                'date' => $data['date'] ?? $blog->date,
                 'publisher' => $data['publisher'] ?? $blog->publisher,
             ]);
             if ($request->hasFile('image_cover') || $request->hasFile('image_content')) {
@@ -90,6 +94,7 @@ class AdminBlogController extends Controller
             }
             $blog->load('category');
             DB::commit();
+
             return apiResponse(200, 'blog updated successfully', BlogResource::make($blog));
         } catch (\Exception $e) {
             DB::rollBack();
@@ -100,7 +105,7 @@ class AdminBlogController extends Controller
     public function delete($id)
     {
         $blog = Blog::find($id);
-        if (!$blog) apiResponse(404, 'blog not found');
+        if (!$blog) return apiResponse(404, 'blog not found');
         ImageManagement::deleteImage($blog->image_cover);
         ImageManagement::deleteImage($blog->image_content);
         $blog->delete();

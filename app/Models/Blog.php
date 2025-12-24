@@ -14,7 +14,6 @@ class Blog extends Model
         'content',
         'image_cover',
         'image_content',
-        'date',
         'publisher',
         'category_id',
         'num_view',
