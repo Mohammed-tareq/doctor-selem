@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard\Book;
 
+use App\Events\NewAddEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Book\BookRequest;
 use App\Http\Resources\Books\BookCollection;
@@ -63,11 +64,11 @@ class BookAdminController extends Controller
             }
             DB::commit();
             $book->load('category');
+            event(new NewAddEvent($book));
             return apiResponse(201, 'book created successfully', BookResource::make($book));
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return $e->getMessage();
             return apiResponse(500, 'Internal server error');
         }
     }
