@@ -27,8 +27,8 @@ class CategoryController extends Controller
 
     public function update($id)
     {
-
-
+  
+        
         $category = Category::find($id);
         if (!$category) return apiResponse(404, 'category not found');
         $data = request()->validate([

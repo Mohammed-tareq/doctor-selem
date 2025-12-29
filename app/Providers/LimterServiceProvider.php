@@ -33,16 +33,16 @@ class LimterServiceProvider extends ServiceProvider
             });
         });
     }
-
+    
     protected function passwordLimiter()
     {
-        RateLimiter::for('limiter', function (Request $request) {
+        RateLimiter::for('passwordLimiter', function (Request $request) {
             return Limit::perMinutes(15, 3)
                 ->by($request->ip())
                 ->response(function () {
                     return apiResponse(
                         429,
-                        'Too many login attempts. Please try again in 1 minutes'
+                        'Too many login attempts. Please try again in 15 minutes'
                     );
                 });
         });

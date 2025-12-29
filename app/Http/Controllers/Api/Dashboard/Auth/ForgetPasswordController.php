@@ -17,9 +17,9 @@ class ForgetPasswordController extends Controller
         ]);
 
         $user = User::whereEmail($request->only('email'))->first();
-        if ($user) {
-            $user->notify(new SendOtpNotification());
-        }
+        // if ($user) {
+        // $user->notify(new SendOtpNotification());
+        // }
         return apiResponse(200, 'Check your email');
     }
 }

@@ -66,7 +66,7 @@ class AdminBlogController extends Controller
             return apiResponse(201, 'blog created successfully', BlogResource::make($blog));
         } catch (\Exception $e) {
             DB::rollBack();
-            return apiResponse(500, $e->getMessage());
+            return apiResponse(500, 'Internal server error');
         }
     }
 

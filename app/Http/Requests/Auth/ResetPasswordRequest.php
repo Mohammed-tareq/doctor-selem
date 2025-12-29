@@ -17,7 +17,7 @@ class ResetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'required|string|min:5|max:6',
+            'token' => 'required|numeric|digits_between:5,6',
             'email' => 'required|email|string',
             'password' => [
                 'required',
@@ -25,7 +25,9 @@ class ResetPasswordRequest extends FormRequest
                 'min:8',
                 'max:20',
                 'confirmed',
-                'not_regex:/<[^>]*>/',
+                "not_regex:/<[^>]*>/",
+                "not_regex:/<\s*script/i",
+                "not_regex:/javascript\s*:/i",
                 Password::min(8)
                     ->letters()
                     ->mixedCase()
@@ -38,7 +40,9 @@ class ResetPasswordRequest extends FormRequest
                 'string',
                 'min:8',
                 'max:20',
-                'not_regex:/<[^>]*>/',
+                "not_regex:/<[^>]*>/",
+                "not_regex:/<\s*script/i",
+                "not_regex:/javascript\s*:/i",
             ],
 
         ];

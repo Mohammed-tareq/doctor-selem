@@ -15,12 +15,12 @@ class LoginController extends Controller
         if (!$request->validated()) return apiResponse(422, 'validation error');
         $data = $request->validated();
 
-        if (RateLimiter::tooManyAttempts($request->ip(), 3)) {
-            $time = RateLimiter::availableIn($request->ip());
-            return apiResponse(429, 'Too Many Attempts. Please try again in ' . $time . ' seconds.');
-        }
-        RateLimiter::increment($request->ip());
-        $remaing = RateLimiter::remaining($request->ip(), 3);
+        // if (RateLimiter::tooManyAttempts($request->ip(), 3)) {
+        //     $time = RateLimiter::availableIn($request->ip());
+        //     return apiResponse(429, 'Too Many Attempts. Please try again in ' . $time . ' seconds.');
+        // }
+        // RateLimiter::increment($request->ip());
+        // $remaing = RateLimiter::remaining($request->ip(), 3);
 
         $user = User::whereEmail($data['email'])->first();
         if ($user && Hash::check($data['password'], $user->password)) {
@@ -28,7 +28,7 @@ class LoginController extends Controller
             return apiResponse(200, 'Login Successfully', ['token' => $token]);
         }
 
-        return apiResponse(401, 'Invalid Credentials', ['remaing' => $remaing]);
+        return apiResponse(401, 'Invalid Credentials');
 
     }
 

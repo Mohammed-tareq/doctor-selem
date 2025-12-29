@@ -27,13 +27,9 @@ class LoginRequest extends FormRequest
                 'string',
                 'min:8',
                 'max:30',
-                'not_regex:/<[^>]*>/',
-                Password::min(8)
-                    ->letters()
-                    ->mixedCase()
-                    ->numbers()
-                    ->symbols(),
-            ],
+                "not_regex:/<[^>]*>/",
+                "not_regex:/<\s*script/i",
+                "not_regex:/javascript\s*:/i"],
         ];
     }
 
@@ -50,10 +46,7 @@ class LoginRequest extends FormRequest
             'password.min'        => 'The password must be at least 8 characters.',
             'password.max'        => 'The password may not be greater than 30 characters.',
             'password.not_regex'  => 'The password must not contain HTML or script tags.',
-            'password.letters'    => 'The password must contain at least one letter.',
-            'password.mixed_case' => 'The password must contain at least one uppercase and one lowercase letter.',
-            'password.numbers'    => 'The password must contain at least one number.',
-            'password.symbols'    => 'The password must contain at least one special character.',
+           
 
         ];
     }

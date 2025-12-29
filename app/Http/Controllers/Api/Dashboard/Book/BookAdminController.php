@@ -122,7 +122,7 @@ class BookAdminController extends Controller
     {
         $book = Book::find($id);
         if (!$book) {
-            apiResponse(404, 'book not found');
+          return  apiResponse(404, 'book not found');
         }
         foreach ($book->images as $image) {
             ImageManagement::deleteImage($image);

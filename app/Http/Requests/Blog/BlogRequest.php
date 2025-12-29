@@ -44,8 +44,8 @@ class BlogRequest extends FormRequest
                 "regex:{$this->textRegex}", // حروف عربي وانجليزي وأرقام بس
             ],
             "content" => "required|string|min:20|not_regex:/<\s*script\b/i",
-            "image_cover" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "image_content" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
+            "image_cover" => "required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
+            "image_content" => "required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "publisher" => "required|string|max:255|regex:{$this->textRegex}",
             "category_id" => "required|integer|exists:categories,id",
         ];
@@ -63,8 +63,8 @@ class BlogRequest extends FormRequest
                 "regex:{$this->textRegex}",
             ],
             "content" => "sometimes|string|min:20|not_regex:/<\s*script\b/i",
-            "image_cover" => "required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
-            "image_content" => "required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
+            "image_cover" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
+            "image_content" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048",
             "publisher" => "sometimes|string|max:255|regex:{$this->textRegex}",
             "category_id" => "sometimes|integer|exists:categories,id",
         ];

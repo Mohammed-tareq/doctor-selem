@@ -27,7 +27,7 @@ class AudioResource extends JsonResource
 
         ];
         if ($withProject) {
-            $data['audio_content'] = asset($this->content);
+            $data['audio_content'] = asset('/public/'.$this->content);
             $data['audio_project'] = [
                 'project_classfication' => $this->project->category->title,
                 'project_title' => $this->project->title,
